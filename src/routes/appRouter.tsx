@@ -1,31 +1,25 @@
 import { createBrowserRouter } from "react-router-dom";
-import SignupPage from "../pages/SignupPage";
+import PublicLayout from "../layouts/PublicLayout";
+import PrivateLayout from "../layouts/PrivateLayout";
+import LandingPage from "../pages/LandingPage";
 import LoginPage from "../pages/LoginPage";
-import ErrorPage from "../pages/ErrorPage";
-import DashboardPage from "./../pages/DashboardPage";
-import PrivateRoute from "./../components/PrivateRoute";
+import SignupPage from "../pages/SignupPage";
+import DashboardPage from "../pages/DashboardPage";
 
 const appRouter = createBrowserRouter([
   {
     path: "/",
-    element: <PrivateRoute />,
+    element: <PublicLayout />,
     children: [
-      {
-        path: "/",
-        element: <DashboardPage />,
-      },
+      { path: "", element: <LandingPage /> },
+      { path: "login", element: <LoginPage /> },
+      { path: "signup", element: <SignupPage /> },
     ],
-    errorElement: <ErrorPage />,
   },
   {
-    path: "/signup",
-    element: <SignupPage />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "/login",
-    element: <LoginPage />,
-    errorElement: <ErrorPage />,
+    path: "/dashboard",
+    element: <PrivateLayout />,
+    children: [{ path: "", element: <DashboardPage /> }],
   },
 ]);
 
