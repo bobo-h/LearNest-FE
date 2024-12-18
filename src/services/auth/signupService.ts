@@ -18,17 +18,23 @@ export interface SignupResponse {
 export const signup = async (
   data: SignupData
 ): Promise<{ user: SignupResponse["user"]; token: string }> => {
-  const { birthDate, ...otherData } = data;
-  const requestData = {
-    ...otherData,
-    birth_date: birthDate,
-  };
-  console.log("📢 회원가입 요청 데이터:", requestData);
+  try {
+    const { birthDate, ...otherData } = data;
+    const requestData = {
+      ...otherData,
+      birth_date: birthDate,
+    };
 
-  const response = await apiClient.post("/auth/signup", requestData);
-  const token = response.headers["authorization"]?.split(" ")[1]; // 'Bearer <token>'에서 토큰만 추출
-  return {
-    user: response.data.user,
-    token: token || "",
-  };
+    const response = await apiClient.post("/auth/signup", requestData);
+    const token = response.headers["authorization"]?.split(" ")[1];
+    return {
+      user: response.data.user,
+      token: token || "",
+    };
+  } catch (error: any) {
+    if (error.response && error.response.data && error.response.data.message) {
+      throw new Error(error.response.data.message);
+    }
+    throw new Error("알 수 없는 에러가 발생했습니다.");
+  }
 };

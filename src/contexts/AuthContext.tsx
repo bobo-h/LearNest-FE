@@ -43,6 +43,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     sessionStorage.removeItem("user");
     sessionStorage.removeItem("accessToken");
     setUser(null);
+    window.location.replace("/");
   };
 
   return (

@@ -12,5 +12,10 @@ export const useSignup = () => {
         login(data.user, data.token);
       }
     },
+    onError: (error: any) => {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+    },
   });
 };

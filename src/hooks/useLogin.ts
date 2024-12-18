@@ -12,5 +12,11 @@ export const useLogin = () => {
         loginContext(data.user, data.token);
       }
     },
+    onError: (error: any) => {
+      // 서버의 에러 메시지를 그대로 전달
+      if (error instanceof Error) {
+        throw new Error(error.message); // LoginPage에서 메시지를 표시할 수 있도록 던짐
+      }
+    },
   });
 };

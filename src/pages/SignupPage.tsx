@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Box, Button, Typography, Link } from "@mui/material";
 import { useSignup } from "../hooks/useSignup";
@@ -10,6 +10,7 @@ interface SignupFormInputs {
   name: string;
   email: string;
   password: string;
+  passwordConfirm: string;
   birthDate: string;
 }
 
@@ -17,17 +18,27 @@ const SignupPage: React.FC = () => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<SignupFormInputs>();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { mutate: signup, isPending } = useSignup();
   const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<SignupFormInputs> = (data) => {
-    signup(data, {
-      onSuccess: () => {
-        navigate("/dashboard");
-      },
-    });
+    const { password, name, email, birthDate } = data;
+    setErrorMessage(null);
+    signup(
+      { password, name, email, birthDate },
+      {
+        onSuccess: () => {
+          navigate("/dashboard");
+        },
+        onError: (error: any) => {
+          setErrorMessage(error.message);
+        },
+      }
+    );
   };
 
   return (
@@ -55,6 +66,12 @@ const SignupPage: React.FC = () => {
           회원가입
         </Typography>
 
+        {errorMessage && (
+          <Typography color="error" mb={2} textAlign="center">
+            {errorMessage}
+          </Typography>
+        )}
+
         <FormInput
           label="이름"
           {...register("name", { required: "이름을 입력해주세요." })}
@@ -71,6 +88,16 @@ const SignupPage: React.FC = () => {
           label="비밀번호"
           {...register("password", { required: "비밀번호를 입력해주세요." })}
           error={errors.password}
+        />
+
+        <PasswordInput
+          label="비밀번호 확인"
+          {...register("passwordConfirm", {
+            required: "비밀번호 확인을 입력해주세요.",
+            validate: (value) =>
+              value === watch("password") || "비밀번호가 일치하지 않습니다.",
+          })}
+          error={errors.passwordConfirm}
         />
 
         <FormInput

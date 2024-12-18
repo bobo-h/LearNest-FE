@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Box, Button, Typography, Link } from "@mui/material";
 import { useLogin } from "../hooks/useLogin";
@@ -17,16 +17,22 @@ const LoginPage: React.FC = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormInputs>();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { mutate: login, isPending } = useLogin();
   const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<LoginFormInputs> = (data) => {
+    setErrorMessage(null);
     login(data, {
       onSuccess: () => {
         navigate("/dashboard");
       },
+      onError: (error: any) => {
+        setErrorMessage(error.message); // 서버의 에러 메시지를 화면에 표시
+      },
     });
   };
+
   return (
     <Box
       sx={{
@@ -51,6 +57,12 @@ const LoginPage: React.FC = () => {
         <Typography variant="h4" component="h1" mb={2} textAlign="center">
           로그인
         </Typography>
+
+        {errorMessage && (
+          <Typography color="error" mb={2} textAlign="center">
+            {errorMessage}
+          </Typography>
+        )}
 
         <FormInput
           label="이메일"
