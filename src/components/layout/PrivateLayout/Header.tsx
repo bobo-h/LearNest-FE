@@ -1,9 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Typography, Avatar } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import ProfileModal from "../../ProfileModal";
+import { useAuth } from "../../../contexts/AuthContext";
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const handleProfileClick = () => {
+    setModalOpen((prev) => !prev);
+  };
 
   return (
     <Box
@@ -23,9 +31,18 @@ const Header: React.FC = () => {
       >
         LearNest
       </Typography>
-      <Box sx={{ display: "flex", alignItems: "center" }}>
-        <Avatar sx={{ bgcolor: "#ccc" }}> </Avatar>
-        <Typography sx={{ marginLeft: "8px" }}>User Name</Typography>
+      <Box
+        sx={{ display: "flex", alignItems: "center" }}
+        onClick={handleProfileClick}
+      >
+        <Typography sx={{ marginLeft: "8px", cursor: "pointer" }}>
+          {user?.name}
+        </Typography>
+        <Avatar
+          src="/profile-pic-placeholder.jpg"
+          sx={{ bgcolor: "#ccc", marginLeft: "8px", cursor: "pointer" }}
+        />
+        {isModalOpen && <ProfileModal onClose={() => setModalOpen(false)} />}
       </Box>
     </Box>
   );
