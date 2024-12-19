@@ -1,36 +1,44 @@
 import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Box, Button, Typography, Link } from "@mui/material";
-import { useLogin } from "../hooks/useLogin";
+import { useSignup } from "../../../hooks/useSignup";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
-import FormInput from "../components/FormInput";
-import PasswordInput from "../components/PasswordInput";
+import FormInput from "../../../components/FormInput";
+import PasswordInput from "../../../components/PasswordInput";
 
-interface LoginFormInputs {
+interface SignupFormInputs {
+  name: string;
   email: string;
   password: string;
+  passwordConfirm: string;
+  birthDate: string;
 }
 
-const LoginPage: React.FC = () => {
+const SignupPage: React.FC = () => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
-  } = useForm<LoginFormInputs>();
+  } = useForm<SignupFormInputs>();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const { mutate: login, isPending } = useLogin();
+  const { mutate: signup, isPending } = useSignup();
   const navigate = useNavigate();
 
-  const onSubmit: SubmitHandler<LoginFormInputs> = (data) => {
+  const onSubmit: SubmitHandler<SignupFormInputs> = (data) => {
+    const { password, name, email, birthDate } = data;
     setErrorMessage(null);
-    login(data, {
-      onSuccess: () => {
-        navigate("/dashboard");
-      },
-      onError: (error: any) => {
-        setErrorMessage(error.message); // 서버의 에러 메시지를 화면에 표시
-      },
-    });
+    signup(
+      { password, name, email, birthDate },
+      {
+        onSuccess: () => {
+          navigate("/dashboard");
+        },
+        onError: (error: any) => {
+          setErrorMessage(error.message);
+        },
+      }
+    );
   };
 
   return (
@@ -55,7 +63,7 @@ const LoginPage: React.FC = () => {
         }}
       >
         <Typography variant="h4" component="h1" mb={2} textAlign="center">
-          로그인
+          회원가입
         </Typography>
 
         {errorMessage && (
@@ -63,6 +71,12 @@ const LoginPage: React.FC = () => {
             {errorMessage}
           </Typography>
         )}
+
+        <FormInput
+          label="이름"
+          {...register("name", { required: "이름을 입력해주세요." })}
+          error={errors.name}
+        />
 
         <FormInput
           label="이메일"
@@ -76,23 +90,41 @@ const LoginPage: React.FC = () => {
           error={errors.password}
         />
 
+        <PasswordInput
+          label="비밀번호 확인"
+          {...register("passwordConfirm", {
+            required: "비밀번호 확인을 입력해주세요.",
+            validate: (value) =>
+              value === watch("password") || "비밀번호가 일치하지 않습니다.",
+          })}
+          error={errors.passwordConfirm}
+        />
+
+        <FormInput
+          label="생년월일"
+          type="date"
+          {...register("birthDate", { required: "생년월일을 입력해주세요." })}
+          error={errors.birthDate}
+        />
+
         <Button
           type="submit"
           variant="contained"
           disabled={isPending}
           fullWidth
         >
-          로그인
+          회원가입
         </Button>
 
         <Typography variant="body2" mt={2} textAlign="center">
-          아직 계정이 없으세요?{" "}
-          <Link component={RouterLink} to="/signup" underline="hover">
-            회원가입 하기
+          이미 계정이 있으세요?{" "}
+          <Link component={RouterLink} to="/login" underline="hover">
+            로그인 하기
           </Link>
         </Typography>
       </Box>
     </Box>
   );
 };
-export default LoginPage;
+
+export default SignupPage;
