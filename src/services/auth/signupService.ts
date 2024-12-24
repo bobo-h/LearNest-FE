@@ -12,6 +12,7 @@ export interface SignupResponse {
   message: string;
   user: {
     name: string;
+    role: string;
   };
 }
 

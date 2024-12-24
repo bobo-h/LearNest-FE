@@ -28,6 +28,7 @@ const LoginPage: React.FC = () => {
         navigate("/dashboard");
       },
       onError: (error: any) => {
+        console.log("Error:", error.message);
         setErrorMessage(error.message); // 서버의 에러 메시지를 화면에 표시
       },
     });

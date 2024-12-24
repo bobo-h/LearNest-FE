@@ -10,6 +10,7 @@ interface LoginResponse {
   message: string;
   user: {
     name: string;
+    role: string;
   };
 }
 

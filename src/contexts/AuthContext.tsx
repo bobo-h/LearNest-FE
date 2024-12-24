@@ -8,6 +8,7 @@ import React, {
 
 interface User {
   name: string;
+  role: string;
 }
 
 interface AuthContextType {
