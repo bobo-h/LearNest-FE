@@ -3,8 +3,8 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { Box, Button, Typography, Link } from "@mui/material";
 import { useLogin } from "../../../hooks/useLogin";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
-import FormInput from "../../../components/FormInput";
-import PasswordInput from "../../../components/PasswordInput";
+import FormInput from "../../../components/common/FormInput";
+import PasswordInput from "../../../components/common/PasswordInput";
 
 interface LoginFormInputs {
   email: string;
@@ -13,7 +13,7 @@ interface LoginFormInputs {
 
 const LoginPage: React.FC = () => {
   const {
-    register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormInputs>();
@@ -24,13 +24,8 @@ const LoginPage: React.FC = () => {
   const onSubmit: SubmitHandler<LoginFormInputs> = (data) => {
     setErrorMessage(null);
     login(data, {
-      onSuccess: () => {
-        navigate("/dashboard");
-      },
-      onError: (error: any) => {
-        console.log("Error:", error.message);
-        setErrorMessage(error.message); // 서버의 에러 메시지를 화면에 표시
-      },
+      onSuccess: () => navigate("/dashboard"),
+      onError: (error: any) => setErrorMessage(error.message),
     });
   };
 
@@ -65,17 +60,8 @@ const LoginPage: React.FC = () => {
           </Typography>
         )}
 
-        <FormInput
-          label="이메일"
-          {...register("email", { required: "이메일을 입력해주세요." })}
-          error={errors.email}
-        />
-
-        <PasswordInput
-          label="비밀번호"
-          {...register("password", { required: "비밀번호를 입력해주세요." })}
-          error={errors.password}
-        />
+        <FormInput name="email" control={control} label="이메일" />
+        <PasswordInput name="password" control={control} label="비밀번호" />
 
         <Button
           type="submit"
@@ -96,4 +82,5 @@ const LoginPage: React.FC = () => {
     </Box>
   );
 };
+
 export default LoginPage;

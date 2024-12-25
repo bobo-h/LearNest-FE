@@ -24,8 +24,8 @@ const ClassActionButton: React.FC = () => {
         onClick={handleToggle}
         sx={{
           position: "absolute",
-          bottom: 16,
-          right: 16,
+          bottom: 10,
+          right: 10,
         }}
       >
         {isModalOpen ? <CloseIcon /> : <AddIcon />}

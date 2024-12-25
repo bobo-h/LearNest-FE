@@ -3,8 +3,8 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { Box, Button, Typography, Link } from "@mui/material";
 import { useSignup } from "../../../hooks/useSignup";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
-import FormInput from "../../../components/FormInput";
-import PasswordInput from "../../../components/PasswordInput";
+import FormInput from "../../../components/common/FormInput";
+import PasswordInput from "../../../components/common/PasswordInput";
 
 interface SignupFormInputs {
   name: string;
@@ -16,9 +16,9 @@ interface SignupFormInputs {
 
 const SignupPage: React.FC = () => {
   const {
-    register,
+    control,
     handleSubmit,
-    watch,
+    getValues,
     formState: { errors },
   } = useForm<SignupFormInputs>();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -31,12 +31,8 @@ const SignupPage: React.FC = () => {
     signup(
       { password, name, email, birthDate },
       {
-        onSuccess: () => {
-          navigate("/dashboard");
-        },
-        onError: (error: any) => {
-          setErrorMessage(error.message);
-        },
+        onSuccess: () => navigate("/dashboard"),
+        onError: (error: any) => setErrorMessage(error.message),
       }
     );
   };
@@ -72,39 +68,26 @@ const SignupPage: React.FC = () => {
           </Typography>
         )}
 
-        <FormInput
-          label="이름"
-          {...register("name", { required: "이름을 입력해주세요." })}
-          error={errors.name}
-        />
-
-        <FormInput
-          label="이메일"
-          {...register("email", { required: "이메일을 입력해주세요." })}
-          error={errors.email}
-        />
-
+        <FormInput name="name" control={control} label="이름" />
+        <FormInput name="email" control={control} label="이메일" />
+        <PasswordInput name="password" control={control} label="비밀번호" />
         <PasswordInput
-          label="비밀번호"
-          {...register("password", { required: "비밀번호를 입력해주세요." })}
-          error={errors.password}
-        />
-
-        <PasswordInput
+          name="passwordConfirm"
+          control={control}
           label="비밀번호 확인"
-          {...register("passwordConfirm", {
+          rules={{
             required: "비밀번호 확인을 입력해주세요.",
-            validate: (value) =>
-              value === watch("password") || "비밀번호가 일치하지 않습니다.",
-          })}
+            validate: (value: string) =>
+              value === getValues("password") ||
+              "비밀번호가 일치하지 않습니다.",
+          }}
           error={errors.passwordConfirm}
         />
-
         <FormInput
+          name="birthDate"
+          control={control}
           label="생년월일"
           type="date"
-          {...register("birthDate", { required: "생년월일을 입력해주세요." })}
-          error={errors.birthDate}
         />
 
         <Button
