@@ -1,13 +1,18 @@
 import React, { useState } from "react";
 import { TextField, IconButton, InputAdornment } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { Controller, Control, FieldError } from "react-hook-form";
+import {
+  Controller,
+  Control,
+  FieldError,
+  RegisterOptions,
+} from "react-hook-form";
 
 interface PasswordInputProps {
   name: string;
   control: Control<any>;
   label: string;
-  rules?: any;
+  rules?: RegisterOptions;
   error?: FieldError;
 }
 
@@ -46,6 +51,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
               ),
             },
           }}
+          sx={{ marginBottom: "16px" }}
         />
       )}
     />

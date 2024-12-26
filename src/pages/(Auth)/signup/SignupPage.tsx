@@ -68,9 +68,58 @@ const SignupPage: React.FC = () => {
           </Typography>
         )}
 
-        <FormInput name="name" control={control} label="이름" />
-        <FormInput name="email" control={control} label="이메일" />
-        <PasswordInput name="password" control={control} label="비밀번호" />
+        <FormInput
+          name="name"
+          control={control}
+          label="이름"
+          rules={{
+            required: "이름을 입력해주세요.",
+            minLength: {
+              value: 2,
+              message: "이름은 최소 2자 이상이어야 합니다.",
+            },
+            maxLength: {
+              value: 50,
+              message: "이름은 최대 50자 이하여야 합니다.",
+            },
+          }}
+        />
+        <FormInput
+          name="email"
+          control={control}
+          label="이메일"
+          rules={{
+            required: "이메일을 입력해주세요.",
+            pattern: {
+              value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$/,
+              message: "유효한 이메일 형식을 입력해주세요.",
+            },
+          }}
+        />
+        <PasswordInput
+          name="password"
+          control={control}
+          label="비밀번호"
+          rules={{
+            required: "비밀번호를 입력해주세요.",
+            minLength: {
+              value: 8,
+              message: "비밀번호는 최소 8자 이상이어야 합니다.",
+            },
+            maxLength: {
+              value: 20,
+              message: "비밀번호는 최대 20자 이하여야 합니다.",
+            },
+            validate: (value: string) => {
+              const hasLetters = /[a-zA-Z]/.test(value);
+              const hasNumbers = /[0-9]/.test(value);
+              if (!hasLetters || !hasNumbers) {
+                return "비밀번호는 영어와 숫자를 조합해야 합니다.";
+              }
+              return true;
+            },
+          }}
+        />
         <PasswordInput
           name="passwordConfirm"
           control={control}
@@ -88,6 +137,7 @@ const SignupPage: React.FC = () => {
           control={control}
           label="생년월일"
           type="date"
+          rules={{ required: "생년월일을 입력해주세요." }}
         />
 
         <Button

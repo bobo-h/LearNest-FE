@@ -60,8 +60,22 @@ const LoginPage: React.FC = () => {
           </Typography>
         )}
 
-        <FormInput name="email" control={control} label="이메일" />
-        <PasswordInput name="password" control={control} label="비밀번호" />
+        <FormInput
+          name="email"
+          control={control}
+          label="이메일"
+          rules={{
+            required: "이메일을 입력해주세요.",
+          }}
+        />
+        <PasswordInput
+          name="password"
+          control={control}
+          label="비밀번호"
+          rules={{
+            required: "비밀번호를 입력해주세요.",
+          }}
+        />
 
         <Button
           type="submit"
