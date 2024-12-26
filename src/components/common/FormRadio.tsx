@@ -5,7 +5,7 @@ import { RadioGroup, FormControlLabel, Radio } from "@mui/material";
 interface FormRadioProps {
   name: string;
   control: Control<any>;
-  options: { value: boolean; label: string }[];
+  options: { value: string; label: string }[];
 }
 
 const FormRadio: React.FC<FormRadioProps> = ({ name, control, options }) => {
@@ -17,7 +17,7 @@ const FormRadio: React.FC<FormRadioProps> = ({ name, control, options }) => {
         <RadioGroup {...field}>
           {options.map((option) => (
             <FormControlLabel
-              key={option.value.toString()}
+              key={option.value}
               value={option.value}
               control={<Radio />}
               label={option.label}

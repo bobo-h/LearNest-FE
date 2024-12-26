@@ -52,7 +52,7 @@ const SignupPage: React.FC = () => {
         sx={{
           width: "100%",
           maxWidth: "400px",
-          padding: 3,
+          padding: 5,
           boxShadow: 3,
           borderRadius: 2,
           bgcolor: "background.paper",
@@ -91,7 +91,7 @@ const SignupPage: React.FC = () => {
           rules={{
             required: "이메일을 입력해주세요.",
             pattern: {
-              value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$/,
+              value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
               message: "유효한 이메일 형식을 입력해주세요.",
             },
           }}

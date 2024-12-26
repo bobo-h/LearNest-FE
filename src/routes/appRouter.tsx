@@ -7,7 +7,7 @@ import LoginPage from "../pages/(Auth)/login/LoginPage";
 import SignupPage from "../pages/(Auth)/signup/SignupPage";
 import DashboardPage from "../pages/(Private)/dashboard/DashboardPage";
 import PrivateRoute from "./PrivateRoute";
-import AdminDashboardPage from "./../pages/(Private)/adminDashboard/AdminDashboardPage";
+import AdminDashboardPage from "../pages/(Private)/adminDashboard/AdminDashboardPage";
 
 const AppRouter = createBrowserRouter([
   {

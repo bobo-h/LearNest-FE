@@ -13,10 +13,6 @@ export interface UserClassesResponse {
   joined_classes: ClassItem[];
 }
 
-/**
- * 사용자 클래스 목록을 가져오는 서비스.
- * @returns 생성한 클래스와 참가한 클래스 목록
- */
 export const fetchUserClasses = async (): Promise<UserClassesResponse> => {
   try {
     const response = await apiClient.get("/classes");
@@ -27,4 +23,9 @@ export const fetchUserClasses = async (): Promise<UserClassesResponse> => {
     }
     throw new Error("클래스 목록 조회 중 오류가 발생했습니다.");
   }
+};
+
+export const createClass = async (formData: FormData) => {
+  const response = await apiClient.post("/classes", formData);
+  return response.data.class;
 };

@@ -44,7 +44,7 @@ const LoginPage: React.FC = () => {
         sx={{
           width: "100%",
           maxWidth: "400px",
-          padding: 3,
+          padding: 5,
           boxShadow: 3,
           borderRadius: 2,
           bgcolor: "background.paper",

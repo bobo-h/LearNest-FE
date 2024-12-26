@@ -20,6 +20,9 @@ apiClient.interceptors.request.use(
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    if (config.data instanceof FormData) {
+      delete config.headers["Content-Type"]; // 브라우저가 자동으로 설정
+    }
     return config;
   },
   (error: AxiosError) => Promise.reject(error)

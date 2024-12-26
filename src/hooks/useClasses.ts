@@ -1,5 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
-import { fetchUserClasses } from "../services/class/classService";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { fetchUserClasses, createClass } from "../services/class/classService";
 
 export const useClasses = () => {
   const { data, error, isLoading } = useQuery({
@@ -10,4 +10,21 @@ export const useClasses = () => {
   });
 
   return { data, error, isLoading };
+};
+
+export const useCreateClass = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: createClass,
+    onSuccess: (newClass) => {
+      // 캐시된 클래스 목록을 무효화
+      queryClient.invalidateQueries({
+        queryKey: ["userClasses"],
+      });
+    },
+    onError: (error) => {
+      console.error("Error creating class:", error);
+    },
+  });
 };
