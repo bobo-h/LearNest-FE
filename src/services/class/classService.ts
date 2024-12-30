@@ -13,6 +13,13 @@ export interface UserClassesResponse {
   joined_classes: ClassItem[];
 }
 
+export interface ClassCreateData {
+  name: string;
+  description?: string;
+  visibility: string;
+  mainImageUrl?: string;
+}
+
 export const fetchUserClasses = async (): Promise<UserClassesResponse> => {
   try {
     const response = await apiClient.get("/classes");
@@ -25,7 +32,7 @@ export const fetchUserClasses = async (): Promise<UserClassesResponse> => {
   }
 };
 
-export const createClass = async (formData: FormData) => {
-  const response = await apiClient.post("/classes", formData);
+export const createClass = async (classData: ClassCreateData) => {
+  const response = await apiClient.post("/classes", classData);
   return response.data.class;
 };

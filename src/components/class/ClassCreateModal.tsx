@@ -3,7 +3,7 @@ import { Box, Button, Typography, Modal } from "@mui/material";
 import { useForm } from "react-hook-form";
 import FormInput from "../common/FormInput";
 import FormRadio from "../common/FormRadio";
-import FileInput from "../common/FileInput";
+import { uploadToCloudinary } from "../../utils/uploadToCloudinary";
 import { useCreateClass } from "../../hooks/useClasses";
 import { useClassContext } from "../../contexts/ClassContext";
 
@@ -16,7 +16,7 @@ interface ClassFormData {
   name: string;
   description?: string;
   visibility: "public" | "private";
-  mainImage?: File;
+  mainImageUrl?: string;
 }
 
 const ClassCreateModal: React.FC<ClassCreateModalProps> = ({
@@ -34,32 +34,44 @@ const ClassCreateModal: React.FC<ClassCreateModalProps> = ({
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const onSubmit = (data: ClassFormData) => {
-    const formData = new FormData();
-    formData.append("name", data.name);
-    if (data.description) {
-      formData.append("description", data.description);
-    }
-    formData.append("visibility", data.visibility);
-    if (data.mainImage) {
-      formData.append("main_image", data.mainImage);
-    }
+  const onSubmit = async (data: ClassFormData) => {
+    try {
+      let mainImageUrl: string | undefined;
 
-    createClass(formData, {
-      onSuccess: (newClass) => {
-        addClass(newClass);
-        onClose();
-        reset();
-        setErrorMessage(null);
-      },
-      onError: (error: any) => {
-        if (error.response?.data?.message) {
-          setErrorMessage(error.response.data.message);
-        } else {
-          setErrorMessage("클래스 생성 중 오류가 발생했습니다.");
+      // Cloudinary에 파일 업로드
+      const fileInput =
+        document.querySelector<HTMLInputElement>("#mainImageFile");
+      const file = fileInput?.files?.[0];
+
+      if (file) {
+        mainImageUrl = await uploadToCloudinary(file); // 업로드 후 URL 반환
+      }
+
+      // 백엔드로 전송할 데이터 구성
+      createClass(
+        {
+          ...data,
+          mainImageUrl, // Cloudinary URL 포함
+        },
+        {
+          onSuccess: (newClass) => {
+            addClass(newClass);
+            onClose();
+            reset();
+            setErrorMessage(null);
+          },
+          onError: (error: any) => {
+            if (error.response?.data?.message) {
+              setErrorMessage(error.response.data.message);
+            } else {
+              setErrorMessage("클래스 생성 중 오류가 발생했습니다.");
+            }
+          },
         }
-      },
-    });
+      );
+    } catch (error) {
+      setErrorMessage("이미지 업로드에 실패했습니다.");
+    }
   };
 
   return (
@@ -101,12 +113,11 @@ const ClassCreateModal: React.FC<ClassCreateModalProps> = ({
             label="클래스 소개(선택사항)"
           />
 
-          <FileInput
-            name="mainImage"
-            control={control}
-            label="클래스 이미지(선택사항)"
-            accept="image/*"
-          />
+          <input id="mainImageFile" type="file" accept="image/*" />
+
+          <Typography variant="caption" color="textSecondary" display="block">
+            대표 이미지를 업로드하세요. (예: 클래스 로고 또는 커버 이미지)
+          </Typography>
 
           <Typography variant="subtitle1" sx={{ marginTop: "16px" }}>
             공개 여부
