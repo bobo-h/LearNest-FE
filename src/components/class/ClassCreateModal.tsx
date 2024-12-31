@@ -38,20 +38,18 @@ const ClassCreateModal: React.FC<ClassCreateModalProps> = ({
     try {
       let mainImageUrl: string | undefined;
 
-      // Cloudinary에 파일 업로드
       const fileInput =
         document.querySelector<HTMLInputElement>("#mainImageFile");
       const file = fileInput?.files?.[0];
 
       if (file) {
-        mainImageUrl = await uploadToCloudinary(file); // 업로드 후 URL 반환
+        mainImageUrl = await uploadToCloudinary(file);
       }
 
-      // 백엔드로 전송할 데이터 구성
       createClass(
         {
           ...data,
-          mainImageUrl, // Cloudinary URL 포함
+          mainImageUrl,
         },
         {
           onSuccess: (newClass) => {
