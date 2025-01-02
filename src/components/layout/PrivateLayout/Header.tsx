@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Box, Typography, Avatar } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import ProfileModal from "../../ProfileModal";
 import { useAuth } from "../../../contexts/AuthContext";
+import ProfileModal from "./../../modals/ProfileModal";
 
 const Header: React.FC = () => {
   const navigate = useNavigate();

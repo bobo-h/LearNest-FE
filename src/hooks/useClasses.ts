@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchUserClasses, createClass } from "../services/class/classService";
 
-export const useClasses = () => {
+export const useGetUserClasses = () => {
   const { data, error, isLoading } = useQuery({
     queryKey: ["userClasses"],
     queryFn: fetchUserClasses,

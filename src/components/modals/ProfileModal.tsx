@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Avatar, Typography, Button } from "@mui/material";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface ProfileModalProps {
   onClose: () => void;

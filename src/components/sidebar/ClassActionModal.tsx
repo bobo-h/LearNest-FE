@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Box, Typography, Button } from "@mui/material";
-import ClassCreateModal from "./../class/ClassCreateModal";
+import ClassCreateModal from "../modals/ClassCreateModal";
 
 interface ClassActionModalProps {
   onClose: () => void;
