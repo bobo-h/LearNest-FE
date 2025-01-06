@@ -24,7 +24,7 @@ const LoginPage: React.FC = () => {
   const onSubmit: SubmitHandler<LoginFormInputs> = (data) => {
     setErrorMessage(null);
     login(data, {
-      onSuccess: () => navigate("/dashboard"),
+      onSuccess: () => navigate("/app/main"),
       onError: (error: any) => setErrorMessage(error.message),
     });
   };

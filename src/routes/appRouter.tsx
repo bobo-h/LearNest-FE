@@ -6,6 +6,7 @@ import LandingPage from "../pages/(Public)/landing/LandingPage";
 import LoginPage from "../pages/(Auth)/login/LoginPage";
 import SignupPage from "../pages/(Auth)/signup/SignupPage";
 import DashboardPage from "../pages/(Private)/dashboard/DashboardPage";
+import ClassPromptPage from "../pages/(Private)/classPrompt/ClassPromptPage";
 import PrivateRoute from "./PrivateRoute";
 import AdminDashboardPage from "../pages/(Private)/adminDashboard/AdminDashboardPage";
 
@@ -24,9 +25,12 @@ const AppRouter = createBrowserRouter([
     ],
   },
   {
-    path: "/dashboard",
+    path: "/app",
     element: <PrivateLayout />,
-    children: [{ path: "", element: <DashboardPage /> }],
+    children: [
+      { path: "main", element: <ClassPromptPage /> },
+      { path: "dashboard", element: <DashboardPage /> },
+    ],
   },
   {
     path: "/admin-dashboard",

@@ -20,19 +20,38 @@ export interface ClassCreateData {
   mainImageUrl?: string;
 }
 
+export interface UnitsResponse {
+  status: string;
+  message: string;
+  units: Unit[];
+}
+
+export interface Unit {
+  id: number;
+  name: string;
+  description: string;
+  subunits: Subunit[];
+}
+
+export interface Subunit {
+  id: number;
+  name: string;
+  description: string;
+}
+
 export const fetchUserClasses = async (): Promise<UserClassesResponse> => {
-  try {
-    const response = await apiClient.get("/classes");
-    return response.data;
-  } catch (error: any) {
-    if (error.response?.data?.message) {
-      throw new Error(error.response.data.message);
-    }
-    throw new Error("클래스 목록 조회 중 오류가 발생했습니다.");
-  }
+  const response = await apiClient.get("/classes");
+  return response.data;
 };
 
 export const createClass = async (classData: ClassCreateData) => {
   const response = await apiClient.post("/classes", classData);
   return response.data.class;
+};
+
+export const fetchUnitsWithSubunits = async (
+  classId: number
+): Promise<UnitsResponse[]> => {
+  const response = await apiClient.get(`/classes/${classId}/units`);
+  return response.data.units;
 };

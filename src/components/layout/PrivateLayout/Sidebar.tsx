@@ -54,7 +54,7 @@ const Sidebar: React.FC = () => {
       }}
     >
       <Typography variant="h6" sx={{ p: 2 }}>
-        {role === "admin" ? "관리자 메뉴" : "내 클래스"}
+        {role === "admin" ? "관리자 메뉴" : "나의 클래스"}
       </Typography>
       <List sx={{ flexGrow: 1, overflowY: "auto" }}>
         {items.map((item) => {

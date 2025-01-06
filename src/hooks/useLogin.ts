@@ -13,9 +13,9 @@ export const useLogin = () => {
       }
     },
     onError: (error: any) => {
-      // 서버의 에러 메시지를 그대로 전달
+      console.error("Login error:", error);
       if (error instanceof Error) {
-        throw new Error(error.message); // LoginPage에서 메시지를 표시할 수 있도록 던짐
+        throw error;
       }
     },
   });

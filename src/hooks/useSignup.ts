@@ -13,8 +13,9 @@ export const useSignup = () => {
       }
     },
     onError: (error: any) => {
+      console.error("Signup error:", error);
       if (error instanceof Error) {
-        throw new Error(error.message);
+        throw error;
       }
     },
   });

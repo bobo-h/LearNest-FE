@@ -14,7 +14,8 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ allowedRoles }) => {
   }
 
   if (!allowedRoles.includes(user.role)) {
-    return <Navigate to="/dashboard" replace />;
+    alert("권한이 없습니다. 다시 로그인해주세요.");
+    return <Navigate to="/login" replace />;
   }
 
   return <Outlet />;

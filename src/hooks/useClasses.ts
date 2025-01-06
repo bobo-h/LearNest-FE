@@ -1,15 +1,17 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { fetchUserClasses, createClass } from "../services/class/classService";
+import {
+  fetchUserClasses,
+  createClass,
+  fetchUnitsWithSubunits,
+} from "../services/class/classService";
 
 export const useGetUserClasses = () => {
-  const { data, error, isLoading } = useQuery({
+  return useQuery({
     queryKey: ["userClasses"],
     queryFn: fetchUserClasses,
     staleTime: 1000 * 60 * 5, // 5분 동안 캐시 유지
     retry: 1, // 실패 시 1회 재시도
   });
-
-  return { data, error, isLoading };
 };
 
 export const useCreateClass = () => {
@@ -26,5 +28,14 @@ export const useCreateClass = () => {
     onError: (error) => {
       console.error("Error creating class:", error);
     },
+  });
+};
+
+export const useUnitsWithSubunits = (classId: number) => {
+  return useQuery({
+    queryKey: ["units", classId],
+    queryFn: () => fetchUnitsWithSubunits(classId),
+    enabled: !!classId,
+    staleTime: 1000 * 60 * 5,
   });
 };
