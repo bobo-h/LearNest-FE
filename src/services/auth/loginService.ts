@@ -18,7 +18,7 @@ export const login = async (
   data: LoginData
 ): Promise<{ user: LoginResponse["user"]; token: string }> => {
   const response = await apiClient.post("/auth/login", data);
-  const token = response.headers["authorization"]?.split(" ")[1]; // 'Bearer <token>'에서 토큰만 추출
+  const token = response.headers["authorization"]?.split(" ")[1];
   return {
     user: response.data.user,
     token: token || "",

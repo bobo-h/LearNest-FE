@@ -17,15 +17,24 @@ const LoginPage: React.FC = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormInputs>();
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { mutate: login, isPending } = useLogin();
   const navigate = useNavigate();
+
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const onSubmit: SubmitHandler<LoginFormInputs> = (data) => {
     setErrorMessage(null);
     login(data, {
-      onSuccess: () => navigate("/app/main"),
-      onError: (error: any) => setErrorMessage(error.message),
+      onSuccess: () => {
+        navigate("/app/main");
+      },
+      onError: (error: any) => {
+        if (error.response?.data?.message) {
+          setErrorMessage(error.response.data.message);
+        } else {
+          setErrorMessage("로그인 중 오류가 발생했습니다.");
+        }
+      },
     });
   };
 

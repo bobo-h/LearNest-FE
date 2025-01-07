@@ -25,8 +25,8 @@ export const useCreateClass = () => {
         queryKey: ["userClasses"],
       });
     },
-    onError: (error) => {
-      console.error("Error creating class:", error);
+    onError: (error: any) => {
+      console.error("Create Class Error:", error);
     },
   });
 };

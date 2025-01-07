@@ -31,16 +31,7 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
-    if (error.response?.status === 401) {
-      const isLoggedIn = !!sessionStorage.getItem("accessToken");
-      if (!isLoggedIn) {
-        window.location.replace("/");
-      } else {
-        alert("로그인이 필요합니다.");
-        window.location.replace("/login");
-      }
-    }
-    return Promise.reject(error);
+    return Promise.reject(error); // 에러를 React Query로 전달
   }
 );
 

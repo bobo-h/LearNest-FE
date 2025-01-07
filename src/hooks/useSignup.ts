@@ -13,10 +13,7 @@ export const useSignup = () => {
       }
     },
     onError: (error: any) => {
-      console.error("Signup error:", error);
-      if (error instanceof Error) {
-        throw error;
-      }
+      console.error("Signup Error:", error);
     },
   });
 };

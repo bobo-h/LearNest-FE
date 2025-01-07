@@ -1,4 +1,5 @@
 import React from "react";
+import { AxiosError } from "axios";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export const queryClient = new QueryClient({
@@ -15,9 +16,20 @@ queryClient.getQueryCache().subscribe((event) => {
     const query = event?.query;
     const error = query?.state.error;
 
-    if (error) {
-      console.error("Query error:", error);
-      alert("데이터를 로드하는 도중 문제가 발생했습니다.");
+    if (error instanceof AxiosError) {
+      const responseError = error.response?.data as { message?: string };
+      const errorMessage =
+        responseError?.message || "데이터 로드 중 문제가 발생했습니다.";
+
+      console.error("Query error:", errorMessage);
+
+      if (error.response?.status === 401) {
+        window.location.replace("/login");
+      } else {
+        alert(errorMessage);
+      }
+    } else {
+      console.error("Unknown error:", error);
     }
   }
 });

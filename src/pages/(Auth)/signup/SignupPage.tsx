@@ -32,7 +32,13 @@ const SignupPage: React.FC = () => {
       { password, name, email, birthDate },
       {
         onSuccess: () => navigate("/dashboard"),
-        onError: (error: any) => setErrorMessage(error.message),
+        onError: (error: any) => {
+          if (error.response?.data?.message) {
+            setErrorMessage(error.response.data.message);
+          } else {
+            setErrorMessage("회원가입 중 오류가 발생했습니다.");
+          }
+        },
       }
     );
   };

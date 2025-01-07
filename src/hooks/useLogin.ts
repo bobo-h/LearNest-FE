@@ -13,10 +13,7 @@ export const useLogin = () => {
       }
     },
     onError: (error: any) => {
-      console.error("Login error:", error);
-      if (error instanceof Error) {
-        throw error;
-      }
+      console.error("Login Error:", error);
     },
   });
 };
