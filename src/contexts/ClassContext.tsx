@@ -1,16 +1,10 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
-
-interface Class {
-  id: number;
-  name: string;
-  visibility: "public" | "private";
-  created_at: Date;
-  created_by: number;
-}
+import { useGetUserClasses } from "../hooks/useClasses";
+import { Class } from "../types/classTypes";
 
 interface ClassContextValue {
-  classes: Class[];
-  addClass: (newClass: Class) => void;
+  createdClasses: Class[];
+  joinedClasses: Class[];
 }
 
 const ClassContext = createContext<ClassContextValue | undefined>(undefined);
@@ -20,14 +14,18 @@ interface ClassProviderProps {
 }
 
 export const ClassProvider = ({ children }: ClassProviderProps) => {
-  const [classes, setClasses] = useState<Class[]>([]);
+  const { data } = useGetUserClasses();
 
-  const addClass = (newClass: Class) => {
-    setClasses((prev) => [...prev, newClass]);
-  };
+  const createdClasses = data?.created_classes ?? [];
+  const joinedClasses = data?.joined_classes ?? [];
 
   return (
-    <ClassContext.Provider value={{ classes, addClass }}>
+    <ClassContext.Provider
+      value={{
+        createdClasses,
+        joinedClasses,
+      }}
+    >
       {children}
     </ClassContext.Provider>
   );
@@ -35,8 +33,7 @@ export const ClassProvider = ({ children }: ClassProviderProps) => {
 
 export const useClassContext = () => {
   const context = useContext(ClassContext);
-  if (!context) {
+  if (!context)
     throw new Error("useClassContext must be used within a ClassProvider");
-  }
   return context;
 };

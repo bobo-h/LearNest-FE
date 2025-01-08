@@ -1,17 +1,5 @@
 import apiClient from "../apiClient";
-
-export interface ClassItem {
-  id: string;
-  name: string;
-  visibility: string;
-  created_at: string;
-}
-
-export interface UserClassesResponse {
-  status: string;
-  created_classes: ClassItem[];
-  joined_classes: ClassItem[];
-}
+import { UserClassesResponse } from "../../types/classTypes";
 
 export interface ClassCreateData {
   name: string;
@@ -51,7 +39,7 @@ export const createClass = async (classData: ClassCreateData) => {
 
 export const fetchUnitsWithSubunits = async (
   classId: number
-): Promise<UnitsResponse[]> => {
+): Promise<UnitsResponse> => {
   const response = await apiClient.get(`/classes/${classId}/units`);
   return response.data.units;
 };

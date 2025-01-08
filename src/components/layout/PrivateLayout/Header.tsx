@@ -27,7 +27,7 @@ const Header: React.FC = () => {
       <Typography
         variant="h6"
         sx={{ fontWeight: "bold", cursor: "pointer" }}
-        onClick={() => navigate("/dashboard")}
+        onClick={() => navigate("/app/main")}
       >
         LearNest
       </Typography>

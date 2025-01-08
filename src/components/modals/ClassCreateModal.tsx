@@ -5,7 +5,6 @@ import FormInput from "../common/FormInput";
 import FormRadio from "../common/FormRadio";
 import { uploadToCloudinary } from "../../utils/uploadToCloudinary";
 import { useCreateClass } from "../../hooks/useClasses";
-import { useClassContext } from "../../contexts/ClassContext";
 
 interface ClassCreateModalProps {
   open: boolean;
@@ -29,7 +28,6 @@ const ClassCreateModal: React.FC<ClassCreateModalProps> = ({
     },
   });
 
-  const { addClass } = useClassContext();
   const { mutate: createClass, isPending } = useCreateClass();
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -52,8 +50,7 @@ const ClassCreateModal: React.FC<ClassCreateModalProps> = ({
           mainImageUrl,
         },
         {
-          onSuccess: (newClass) => {
-            addClass(newClass);
+          onSuccess: () => {
             onClose();
             reset();
             setErrorMessage(null);

@@ -1,6 +1,20 @@
 import React from "react";
+import {
+  QueryClient,
+  QueryClientProvider,
+  QueryCache,
+} from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const errorHandler = (error: unknown) => {
+  if (error instanceof AxiosError) {
+    const responseError = error.response?.data as { message?: string };
+    const errorMessage =
+      responseError?.message || "데이터 로드 중 문제가 발생했습니다.";
+
+    console.error("Query error:", errorMessage);
+  }
+};
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -8,30 +22,15 @@ export const queryClient = new QueryClient({
       retry: 1, // 실패 시 1회 재시도
       staleTime: 1000 * 60 * 5, // 5분 동안 캐시 유지
     },
+    mutations: {
+      onError: errorHandler,
+    },
   },
-});
-
-queryClient.getQueryCache().subscribe((event) => {
-  if (event?.type === "observerResultsUpdated") {
-    const query = event?.query;
-    const error = query?.state.error;
-
-    if (error instanceof AxiosError) {
-      const responseError = error.response?.data as { message?: string };
-      const errorMessage =
-        responseError?.message || "데이터 로드 중 문제가 발생했습니다.";
-
-      console.error("Query error:", errorMessage);
-
-      if (error.response?.status === 401) {
-        window.location.replace("/login");
-      } else {
-        alert(errorMessage);
-      }
-    } else {
-      console.error("Unknown error:", error);
-    }
-  }
+  queryCache: new QueryCache({
+    onError: (error) => {
+      errorHandler(error);
+    },
+  }),
 });
 
 const CustomQueryClientProvider = ({

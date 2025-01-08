@@ -21,7 +21,7 @@ apiClient.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
     }
     if (config.data instanceof FormData) {
-      delete config.headers["Content-Type"]; // 브라우저가 자동으로 설정
+      delete config.headers["Content-Type"];
     }
     return config;
   },
@@ -31,7 +31,16 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
-    return Promise.reject(error); // 에러를 React Query로 전달
+    if (error.response?.status === 401) {
+      const isLoggedIn = !!sessionStorage.getItem("accessToken");
+      if (!isLoggedIn) {
+        window.location.replace("/");
+      } else {
+        alert("로그인이 필요합니다.");
+        window.location.replace("/login");
+      }
+    }
+    return Promise.reject(error);
   }
 );
 
