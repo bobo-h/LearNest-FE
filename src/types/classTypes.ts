@@ -24,6 +24,7 @@ export interface UnitsResponse {
 
 export interface Unit {
   id: number;
+  class_id: number;
   name: string;
   description: string;
   subunits: Subunit[];
@@ -31,6 +32,9 @@ export interface Unit {
 
 export interface Subunit {
   id: number;
+  unit_id: number;
   name: string;
   description: string;
+  content: any;
+  materials_path: string;
 }

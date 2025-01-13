@@ -12,6 +12,8 @@ import ClassPromptPage from "../pages/(Private)/classPrompt/ClassPromptPage";
 import AdminDashboardPage from "../pages/(Private)/adminDashboard/AdminDashboardPage";
 import MemberManagePage from "./../pages/(Private)/classManagement/MemberManagePage";
 import UnitsManagePage from "./../pages/(Private)/classManagement/UnitsManagePage";
+import EditUnitDetailPage from "./../pages/(Private)/classManagement/unitsEditor/EditUnitDetailPage";
+import EditSubunitDetailPage from "./../pages/(Private)/classManagement/unitsEditor/EditSubunitDetailPage";
 
 const AppRouter = createBrowserRouter([
   {
@@ -38,7 +40,17 @@ const AppRouter = createBrowserRouter([
         children: [
           { path: "members", element: <MemberManagePage /> },
           { path: "units", element: <UnitsManagePage /> },
-          { path: "units-editor", element: <UnitsEditorLayout /> },
+          {
+            path: "units-edit",
+            element: <UnitsEditorLayout />,
+            children: [
+              { path: "unit/:unitId/detail", element: <EditUnitDetailPage /> },
+              {
+                path: "unit/:unitId/subunit/:subunitId/detail",
+                element: <EditSubunitDetailPage />,
+              },
+            ],
+          },
         ],
       },
     ],

@@ -3,7 +3,7 @@ import { Box, Typography, List, ListItem, ListItemText } from "@mui/material";
 import { Unit } from "../../types/classTypes";
 
 interface UnitDetailProps {
-  unit: Unit | null; // 선택된 단원 정보
+  unit: Unit | null;
 }
 
 const UnitDetail: React.FC<UnitDetailProps> = ({ unit }) => {

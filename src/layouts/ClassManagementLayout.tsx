@@ -8,7 +8,7 @@ const ClassManagementLayout: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const isEditorRoute = location.pathname.includes("units-editor");
+  const isEditorRoute = location.pathname.includes("units-edit");
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
@@ -34,7 +34,7 @@ const ClassManagementLayout: React.FC = () => {
           )}
         </Box>
         {!isEditorRoute && (
-          <Button variant="contained" onClick={() => navigate("units-editor")}>
+          <Button variant="contained" onClick={() => navigate("units-edit")}>
             학습 설정
           </Button>
         )}
