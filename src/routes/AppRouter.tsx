@@ -2,13 +2,16 @@ import { createBrowserRouter } from "react-router-dom";
 import PublicLayout from "../layouts/PublicLayout";
 import AuthLayout from "../layouts/AuthLayout";
 import PrivateLayout from "../layouts/PrivateLayout";
+import ClassManagementLayout from "layouts/ClassManagementLayout";
+import UnitsEditorLayout from "./../layouts/UnitsEditorLayout";
 import LandingPage from "../pages/(Public)/landing/LandingPage";
 import LoginPage from "../pages/(Auth)/login/LoginPage";
 import SignupPage from "../pages/(Auth)/signup/SignupPage";
-import DashboardPage from "../pages/(Private)/dashboard/DashboardPage";
-import ClassPromptPage from "../pages/(Private)/classPrompt/ClassPromptPage";
 import PrivateRoute from "./PrivateRoute";
+import ClassPromptPage from "../pages/(Private)/classPrompt/ClassPromptPage";
 import AdminDashboardPage from "../pages/(Private)/adminDashboard/AdminDashboardPage";
+import MemberManagePage from "./../pages/(Private)/classManagement/MemberManagePage";
+import UnitsManagePage from "./../pages/(Private)/classManagement/UnitsManagePage";
 
 const AppRouter = createBrowserRouter([
   {
@@ -29,7 +32,15 @@ const AppRouter = createBrowserRouter([
     element: <PrivateLayout />,
     children: [
       { path: "main", element: <ClassPromptPage /> },
-      { path: "dashboard", element: <DashboardPage /> },
+      {
+        path: "class-management/:classId",
+        element: <ClassManagementLayout />,
+        children: [
+          { path: "members", element: <MemberManagePage /> },
+          { path: "units", element: <UnitsManagePage /> },
+          { path: "units-editor", element: <UnitsEditorLayout /> },
+        ],
+      },
     ],
   },
   {

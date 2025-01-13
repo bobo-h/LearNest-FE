@@ -1,30 +1,11 @@
 import apiClient from "../apiClient";
-import { UserClassesResponse } from "../../types/classTypes";
+import { UserClassesResponse, UnitsResponse } from "../../types/classTypes";
 
 export interface ClassCreateData {
   name: string;
   description?: string;
   visibility: string;
   mainImageUrl?: string;
-}
-
-export interface UnitsResponse {
-  status: string;
-  message: string;
-  units: Unit[];
-}
-
-export interface Unit {
-  id: number;
-  name: string;
-  description: string;
-  subunits: Subunit[];
-}
-
-export interface Subunit {
-  id: number;
-  name: string;
-  description: string;
 }
 
 export const fetchUserClasses = async (): Promise<UserClassesResponse> => {

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   List,
@@ -12,21 +13,34 @@ import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import { SidebarItems } from "../../sidebar/SidebarItems";
 import { useAuth } from "../../../contexts/AuthContext";
 import ClassActionButton from "./../../sidebar/ClassActionButton";
+import { useClassContext } from "../../../contexts/ClassContext";
 import { useGetUserClasses } from "../../../hooks/useClasses";
 
 const Sidebar: React.FC = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const role = user?.role === "admin" ? "admin" : "user";
   const items = SidebarItems[role];
 
-  const [openItems, setOpenItems] = useState<Record<string, boolean>>({});
+  const { selectClass } = useClassContext();
   const { data: classData, isLoading, error } = useGetUserClasses();
+  const [openSubItems, setOpenSubItems] = useState<Record<number, boolean>>({});
 
-  const handleToggle = (id: string) => {
-    setOpenItems((prev) => ({
+  const handleSubMenuToggle = (classId: number) => {
+    setOpenSubItems((prev) => ({
       ...prev,
-      [id]: !prev[id],
+      [classId]: !prev[classId],
     }));
+  };
+
+  const handleSubMenuClick = (subMenuId: string, classId: number) => {
+    const selectedClass = classData?.created_classes.find(
+      (cls) => cls.id === classId
+    );
+    if (!selectedClass) return;
+
+    selectClass(selectedClass);
+    navigate(`/app/class-management/${classId}/${subMenuId}`);
   };
 
   const getClassData = (id: string) => {
@@ -82,46 +96,38 @@ const Sidebar: React.FC = () => {
                     데이터를 가져오는 중 오류가 발생했습니다.
                   </Typography>
                 ) : data.length > 0 ? (
-                  data.map((child: any) =>
-                    item.subMenu ? (
-                      <React.Fragment key={child.id}>
-                        <ListItemButton onClick={() => handleToggle(child.id)}>
-                          <ListItemText primary={child.name} />
-                          {openItems[child.id] ? (
-                            <ExpandLess />
-                          ) : (
-                            <ExpandMore />
-                          )}
-                        </ListItemButton>
-                        <Collapse
-                          in={openItems[child.id]}
-                          timeout="auto"
-                          unmountOnExit
-                        >
-                          <Box sx={{ pl: 4 }}>
-                            {item.subMenu?.map((subMenu) => (
-                              <ListItemButton
-                                key={subMenu.id}
-                                component="a"
-                                href={`/${item.id}/${child.id}/${subMenu.id}`}
-                              >
-                                <ListItemText primary={subMenu.name} />
-                              </ListItemButton>
-                            ))}
-                          </Box>
-                        </Collapse>
-                      </React.Fragment>
-                    ) : (
-                      // 하위 메뉴가 없는 경우
+                  data.map((child: any) => (
+                    <React.Fragment key={child.id}>
                       <ListItemButton
-                        key={child.id}
-                        component="a"
-                        href={`/${item.id}/${child.id}`}
+                        onClick={() => handleSubMenuToggle(child.id)}
                       >
                         <ListItemText primary={child.name} />
+                        {openSubItems[child.id] ? (
+                          <ExpandLess />
+                        ) : (
+                          <ExpandMore />
+                        )}
                       </ListItemButton>
-                    )
-                  )
+                      <Collapse
+                        in={openSubItems[child.id]}
+                        timeout="auto"
+                        unmountOnExit
+                      >
+                        <Box sx={{ pl: 4 }}>
+                          {item.subMenu?.map((subMenu) => (
+                            <ListItemButton
+                              key={subMenu.id}
+                              onClick={() =>
+                                handleSubMenuClick(subMenu.id, child.id)
+                              }
+                            >
+                              <ListItemText primary={subMenu.name} />
+                            </ListItemButton>
+                          ))}
+                        </Box>
+                      </Collapse>
+                    </React.Fragment>
+                  ))
                 ) : (
                   <Typography variant="body2">항목이 없습니다.</Typography>
                 )}

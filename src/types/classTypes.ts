@@ -15,3 +15,22 @@ export interface UserClassesResponse {
   created_classes: Class[];
   joined_classes: Class[];
 }
+
+export interface UnitsResponse {
+  status: string;
+  message: string;
+  units: Unit[];
+}
+
+export interface Unit {
+  id: number;
+  name: string;
+  description: string;
+  subunits: Subunit[];
+}
+
+export interface Subunit {
+  id: number;
+  name: string;
+  description: string;
+}
