@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Typography, List, ListItem, ListItemText } from "@mui/material";
-import { Unit } from "../../types/classTypes";
+import { Unit } from "../../types/unitTypes";
 
 interface UnitDetailProps {
   unit: Unit | null;

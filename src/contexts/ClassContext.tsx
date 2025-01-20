@@ -1,12 +1,12 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { Class } from "../types/classTypes";
 
-interface ClassContextValue {
+interface ClassContextProps {
   selectedClass: Class | null;
   selectClass: (classData: Class) => void;
 }
 
-const ClassContext = createContext<ClassContextValue | undefined>(undefined);
+const ClassContext = createContext<ClassContextProps | undefined>(undefined);
 
 interface ClassProviderProps {
   children?: ReactNode;

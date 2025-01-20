@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Dispatch, SetStateAction } from "react";
 import {
   Box,
   Button,
@@ -8,64 +8,142 @@ import {
   ListItemText,
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
-import { Unit, Subunit } from "../../types/classTypes";
+import { Unit, Subunit } from "../../types/unitTypes";
 
-const EditUnitList: React.FC = () => {
-  const { classId } = useParams<{ classId: string }>();
-  const [units, setUnits] = useState<Unit[]>([]);
-  const [selectedUnitId, setSelectedUnitId] = useState<number | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string>("");
+interface EditUnitListProps {
+  units: Unit[];
+  setUnits: Dispatch<SetStateAction<Unit[]>>;
+  subunits: Subunit[];
+  setSubunits: Dispatch<SetStateAction<Subunit[]>>;
+}
+
+const EditUnitList: React.FC<EditUnitListProps> = ({
+  units,
+  setUnits,
+  subunits,
+  setSubunits,
+}) => {
+  const { classId: classIdParams } = useParams<{ classId: string }>();
+  const classId = Number(classIdParams);
   const navigate = useNavigate();
+  const [selectedUnitId, setSelectedUnitId] = useState<number | null>(null);
+  const [selectedSubunitId, setSelectedSubunitId] = useState<number | null>(
+    null
+  );
 
   const handleAddUnit = () => {
     const newUnit: Unit = {
+      type: "create",
       id: Date.now(),
-      class_id: Number(classId),
       name: `단원 ${units.length + 1}`,
       description: "",
       subunits: [],
     };
+
     setUnits([...units, newUnit]);
-    setErrorMessage("");
   };
 
   const handleAddSubunit = () => {
     if (!selectedUnitId) {
-      setErrorMessage("단원을 먼저 선택해주세요.");
+      alert("소단원을 추가하려면 단원을 먼저 선택해주세요.");
       return;
     }
+    const newSubunit: Subunit = {
+      type: "create",
+      id: Date.now(),
+      unit_id: selectedUnitId,
+      name: `소단원 ${
+        subunits.filter((s) => s.unit_id === selectedUnitId).length + 1
+      }`,
+      description: "",
+      content: "",
+      materials_path: "",
+    };
 
-    const updatedUnits = units.map((unit) => {
-      if (unit.id === selectedUnitId) {
-        const newSubunit: Subunit = {
-          id: Date.now(),
-          unit_id: selectedUnitId,
-          name: `소단원 ${unit.subunits.length + 1}`,
-          description: "",
-          content: null,
-          materials_path: "",
-        };
-        return {
-          ...unit,
-          subunits: [...unit.subunits, newSubunit],
-        };
-      }
-      return unit;
-    });
+    setSubunits((prevSubunits) => [...prevSubunits, newSubunit]);
 
-    setUnits(updatedUnits);
-    setErrorMessage("");
+    setUnits((prevUnits) =>
+      prevUnits.map((unit) =>
+        unit.id === selectedUnitId
+          ? { ...unit, subunits: [...unit.subunits, newSubunit] }
+          : unit
+      )
+    );
+  };
+
+  const handleRemoveUnit = () => {
+    if (!selectedUnitId) {
+      alert("삭제할 단원을 선택하세요.");
+      return;
+    }
+    setUnits(
+      (prevUnits) =>
+        prevUnits
+          .map((unit) =>
+            unit.id === selectedUnitId
+              ? unit.type === undefined
+                ? { ...unit, type: "delete" }
+                : null
+              : unit
+          )
+          .filter((unit) => unit !== null) as Unit[]
+    );
+    setSubunits((prevSubunits: Subunit[]) =>
+      prevSubunits.filter((subunit) => subunit.unit_id !== selectedUnitId)
+    );
+    setSelectedUnitId(null);
+  };
+
+  const handleRemoveSubunit = () => {
+    if (!selectedUnitId) {
+      alert("단원을 먼저 선택하세요.");
+      return;
+    }
+    const subunitsInUnit = subunits.filter(
+      (subunit) => subunit.unit_id === selectedUnitId
+    );
+    if (subunitsInUnit.length === 0) {
+      alert("삭제할 소단원이 없습니다.");
+      return;
+    }
+    const lastSubunit = subunitsInUnit[subunitsInUnit.length - 1];
+    setSubunits(
+      (prevSubunits) =>
+        prevSubunits
+          .map((subunit) =>
+            subunit.id === lastSubunit.id
+              ? subunit.type === undefined
+                ? { ...subunit, type: "delete" }
+                : null
+              : subunit
+          )
+          .filter((subunit) => subunit !== null) as Subunit[]
+    );
+    setUnits((prevUnits) =>
+      prevUnits.map((unit) =>
+        unit.id === selectedUnitId
+          ? {
+              ...unit,
+              subunits: unit.subunits.filter(
+                (subunit) => subunit.id !== lastSubunit.id
+              ),
+            }
+          : unit
+      )
+    );
   };
 
   const handleSelectUnit = (unitId: number) => {
     setSelectedUnitId(unitId);
+    setSelectedSubunitId(null);
     navigate(
       `/app/class-management/${classId}/units-edit/unit/${unitId}/detail`
     );
-    setErrorMessage("");
   };
 
   const handleSelectSubunit = (unitId: number, subunitId: number) => {
+    setSelectedUnitId(unitId);
+    setSelectedSubunitId(subunitId);
     navigate(
       `/app/class-management/${classId}/units-edit/unit/${unitId}/subunit/${subunitId}/detail`
     );
@@ -101,15 +179,18 @@ const EditUnitList: React.FC = () => {
                 >
                   <ListItemText primary={unit.name} />
                 </ListItemButton>
-                {unit.subunits.map((subunit) => (
-                  <ListItemButton
-                    key={subunit.id}
-                    sx={{ pl: 4 }}
-                    onClick={() => handleSelectSubunit(unit.id, subunit.id)}
-                  >
-                    <ListItemText primary={`- ${subunit.name}`} />
-                  </ListItemButton>
-                ))}
+                {subunits
+                  .filter((subunit) => subunit.unit_id === unit.id)
+                  .map((subunit) => (
+                    <ListItemButton
+                      key={subunit.id}
+                      sx={{ pl: 4 }}
+                      selected={subunit.id === selectedSubunitId}
+                      onClick={() => handleSelectSubunit(unit.id, subunit.id)}
+                    >
+                      <ListItemText primary={`- ${subunit.name}`} />
+                    </ListItemButton>
+                  ))}
               </React.Fragment>
             ))}
           </List>
@@ -117,12 +198,6 @@ const EditUnitList: React.FC = () => {
           <Typography>아직 단원이 없습니다.</Typography>
         )}
       </Box>
-
-      {errorMessage && (
-        <Typography color="error" sx={{ marginBottom: 2 }}>
-          {errorMessage}
-        </Typography>
-      )}
 
       <Box
         sx={{
@@ -148,7 +223,7 @@ const EditUnitList: React.FC = () => {
             <Button variant="outlined" size="small" onClick={handleAddUnit}>
               +
             </Button>
-            <Button variant="outlined" size="small">
+            <Button variant="outlined" size="small" onClick={handleRemoveUnit}>
               -
             </Button>
           </Box>
@@ -171,7 +246,11 @@ const EditUnitList: React.FC = () => {
             <Button variant="outlined" size="small" onClick={handleAddSubunit}>
               +
             </Button>
-            <Button variant="outlined" size="small">
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={handleRemoveSubunit}
+            >
               -
             </Button>
           </Box>

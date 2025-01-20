@@ -1,9 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  fetchUserClasses,
-  createClass,
-  fetchUnitsWithSubunits,
-} from "../services/class/classService";
+import { fetchUserClasses, createClass } from "../services/class/classService";
 
 export const useGetUserClasses = () => {
   return useQuery({
@@ -28,14 +24,5 @@ export const useCreateClass = () => {
     onError: (error: any) => {
       console.error("Create Class Error:", error);
     },
-  });
-};
-
-export const useUnitsWithSubunits = (classId: number) => {
-  return useQuery({
-    queryKey: ["units", classId],
-    queryFn: () => fetchUnitsWithSubunits(classId),
-    enabled: !!classId,
-    staleTime: 1000 * 60 * 5,
   });
 };

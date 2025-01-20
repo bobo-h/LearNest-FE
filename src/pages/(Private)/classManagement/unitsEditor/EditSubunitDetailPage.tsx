@@ -1,57 +1,78 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
+import { useParams, useOutletContext } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Box, Typography, Button } from "@mui/material";
 import FormInput from "../../../../components/common/FormInput";
 import FileInput from "../../../../components/common/FileInput";
+import { Subunit } from "../../../../types/unitTypes";
 
-interface SubunitFormValues {
-  name: string;
-  description: string | null;
-  content: string | null;
-  materials_path: File | null;
+interface OutletContext {
+  subunits: Subunit[];
+  setSubunits: Dispatch<SetStateAction<Subunit[]>>;
 }
 
 const EditSubunitDetailPage: React.FC = () => {
-  const { control, handleSubmit } = useForm<SubunitFormValues>({
-    defaultValues: {
-      name: "",
-      description: "",
-      content: "",
-      materials_path: null,
-    },
-  });
+  const { subunitId: subunitIdParams } = useParams<{ subunitId: string }>();
+  const { subunits, setSubunits } = useOutletContext<OutletContext>();
+  const subunitId = Number(subunitIdParams);
+  const { control } = useForm();
 
-  const handleSave = () => {
-    // 저장 로직 추가 예정
-    console.log("Subunit details saved");
+  const currentSubunit = subunits.find((subunit) => subunit.id === subunitId);
+
+  const handleChange = (field: keyof Subunit, value: string) => {
+    setSubunits((prevSubunits) =>
+      prevSubunits.map((subunit) =>
+        subunit.id === subunitId ? { ...subunit, [field]: value } : subunit
+      )
+    );
   };
 
-  return (
-    <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
-      <Box
-        sx={{
-          flex: 1,
-          padding: 2,
-        }}
-      >
-        <Typography variant="h6" sx={{ marginBottom: 2 }}>
-          소단원 상세 정보
-        </Typography>
-        <FormInput label="소단원 이름" name="name" control={control} />
-        <FormInput label="소단원 설명" name="description" control={control} />
-        <FormInput label="소단원 콘텐츠" name="content" control={control} />
-        <FileInput
-          label="자료 업로드"
-          name="materials_path"
-          control={control}
-        />
-      </Box>
+  if (!currentSubunit) {
+    return <Typography>소단원을 찾을 수 없습니다.</Typography>;
+  }
 
-      <Box sx={{ display: "flex", justifyContent: "flex-end", marginTop: 2 }}>
-        <Button variant="contained" onClick={handleSave}>
-          저장
-        </Button>
-      </Box>
+  return (
+    <Box sx={{ flex: 1, display: "flex", flexDirection: "column", padding: 2 }}>
+      <Typography variant="h6" sx={{ marginBottom: 2 }}>
+        소단원 상세 정보
+      </Typography>
+
+      {/* 소단원 이름 */}
+      <FormInput
+        name="name"
+        control={control}
+        label="소단원 이름"
+        defaultValue={currentSubunit.name || ""}
+        rules={{ required: "소단원 이름을 입력해주세요." }}
+        onChange={(e) => handleChange("name", e.target.value)}
+      />
+
+      {/* 소단원 설명 */}
+      <FormInput
+        name="description"
+        control={control}
+        label="간단한 소단원 설명"
+        defaultValue={currentSubunit.description || ""}
+        onChange={(e) => handleChange("description", e.target.value)}
+      />
+
+      {/* 소단원 콘텐츠 */}
+      <FormInput
+        name="content"
+        control={control}
+        label="소단원 콘텐츠"
+        defaultValue={currentSubunit.content || ""}
+        onChange={(e) => handleChange("content", e.target.value)}
+      />
+
+      {/* 자료 업로드 */}
+      <FileInput
+        name="materials_path"
+        control={control}
+        label="자료 업로드"
+        // defaultValue={currentSubunit.materials_path || ""}
+        // onChange={(e) => handleChange("materials_path", e.target.value)}
+      />
     </Box>
   );
 };

@@ -1,12 +1,49 @@
 import React from "react";
 import { Box, Button } from "@mui/material";
 import { Outlet } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import EditUnitList from "../components/classUnits/EditUnitList";
+import { useUnitContext } from "../contexts/UnitContext";
+import { useFetchUnitsWithSubunits } from "../hooks/useUnits";
 
 const UnitsEditorLayout: React.FC = () => {
+  const { classId } = useParams<{ classId: string }>();
+  const { units, subunits, setUnits, setSubunits, clearUnitChanges } =
+    useUnitContext();
+  const { mutate, isPending } = useFetchUnitsWithSubunits(Number(classId));
+  console.log("Units: ", units);
+  console.log("Subunits: ", subunits);
+
+  const handleSave = () => {
+    const changedUnits = units.filter(
+      (unit) => unit.type || unit.subunits.some((subunit) => subunit.type)
+    );
+
+    if (changedUnits.length === 0) {
+      alert("변경 사항이 없습니다.");
+      return;
+    }
+
+    mutate(changedUnits, {
+      onSuccess: () => {
+        clearUnitChanges();
+        alert("변경 사항이 저장되었습니다.");
+      },
+      onError: (error: any) => {
+        console.error("Error saving changes:", error);
+        alert("저장 중 문제가 발생했습니다.");
+      },
+    });
+  };
+
   return (
     <Box sx={{ display: "flex", height: "100%" }}>
-      <EditUnitList />
+      <EditUnitList
+        units={units}
+        setUnits={setUnits}
+        subunits={subunits}
+        setSubunits={setSubunits}
+      />
       <Box
         sx={{
           display: "flex",
@@ -27,7 +64,7 @@ const UnitsEditorLayout: React.FC = () => {
             marginLeft: 2,
           }}
         >
-          <Outlet />
+          <Outlet context={{ units, setUnits, subunits, setSubunits }} />
         </Box>
 
         <Box
@@ -35,11 +72,11 @@ const UnitsEditorLayout: React.FC = () => {
             display: "flex",
             justifyContent: "flex-end",
             padding: 2,
-            gap: 3,
           }}
         >
-          <Button variant="outlined">임시 저장</Button>
-          <Button variant="contained">설정 완료</Button>
+          <Button variant="contained" onClick={handleSave} disabled={isPending}>
+            설정 완료
+          </Button>
         </Box>
       </Box>
     </Box>

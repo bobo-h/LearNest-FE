@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Box } from "@mui/material";
 import UnitList from "../../../components/classUnits/UnitList";
 import UnitDetail from "../../../components/classUnits/UnitDetail";
-import { Unit } from "../../../types/classTypes";
+import { Unit } from "../../../types/unitTypes";
 
 const UnitsManagePage: React.FC = () => {
   const [selectedUnit, setSelectedUnit] = useState<Unit | null>(null);

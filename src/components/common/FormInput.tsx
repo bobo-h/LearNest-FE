@@ -14,6 +14,10 @@ interface FormInputProps {
   type?: React.InputHTMLAttributes<HTMLInputElement>["type"];
   rules?: RegisterOptions;
   error?: FieldError;
+  defaultValue?: string;
+  onChange?: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
 }
 
 const FormInput: React.FC<FormInputProps> = ({
@@ -22,12 +26,14 @@ const FormInput: React.FC<FormInputProps> = ({
   label,
   type = "text",
   rules,
+  defaultValue = "",
+  onChange,
 }) => {
   return (
     <Controller
       name={name}
       control={control}
-      defaultValue=""
+      defaultValue={defaultValue}
       rules={rules}
       render={({ field, fieldState: { error } }) => (
         <TextField
@@ -38,6 +44,14 @@ const FormInput: React.FC<FormInputProps> = ({
           helperText={error?.message || ""}
           fullWidth
           sx={{ marginBottom: "16px" }}
+          onChange={(
+            e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+          ) => {
+            field.onChange(e);
+            if (onChange) {
+              onChange(e);
+            }
+          }}
         />
       )}
     />

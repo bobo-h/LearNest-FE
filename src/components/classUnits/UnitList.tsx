@@ -7,8 +7,8 @@ import {
   ListItemText,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
-import { useUnitsWithSubunits } from "../../hooks/useClasses";
-import { Unit } from "../../types/classTypes";
+import { useGetUnitsWithSubunits } from "../../hooks/useUnits";
+import { Unit } from "../../types/unitTypes";
 
 interface UnitListProps {
   onSelect: (unit: Unit) => void;
@@ -20,7 +20,7 @@ const UnitList: React.FC<UnitListProps> = ({ onSelect }) => {
     data: unitsResponse,
     isLoading,
     error,
-  } = useUnitsWithSubunits(Number(classId));
+  } = useGetUnitsWithSubunits(Number(classId));
 
   if (isLoading) return <Typography>로딩 중...</Typography>;
   if (error) return <Typography>오류가 발생했습니다.</Typography>;
