@@ -6,13 +6,11 @@ import {
   Dispatch,
   SetStateAction,
 } from "react";
-import { Unit, Subunit } from "../types/unitTypes";
+import { Unit } from "../types/unitTypes";
 
 type UnitContextType = {
   units: Unit[];
-  subunits: Subunit[];
   setUnits: Dispatch<SetStateAction<Unit[]>>;
-  setSubunits: Dispatch<SetStateAction<Subunit[]>>;
   clearUnitChanges: () => void;
 };
 
@@ -20,19 +18,16 @@ const UnitContext = createContext<UnitContextType | undefined>(undefined);
 
 export const UnitProvider = ({ children }: { children: ReactNode }) => {
   const [units, setUnits] = useState<Unit[]>([]);
-  const [subunits, setSubunits] = useState<Subunit[]>([]);
 
   const clearUnitChanges = () => {
     setUnits((prevUnits) =>
       prevUnits.map((unit) => ({
         ...unit,
         type: undefined,
-      }))
-    );
-    setSubunits((prevSubunits) =>
-      prevSubunits.map((subunit) => ({
-        ...subunit,
-        type: undefined,
+        subunits: unit.subunits.map((subunit) => ({
+          ...subunit,
+          type: undefined,
+        })),
       }))
     );
   };
@@ -41,9 +36,7 @@ export const UnitProvider = ({ children }: { children: ReactNode }) => {
     <UnitContext.Provider
       value={{
         units,
-        subunits,
         setUnits,
-        setSubunits,
         clearUnitChanges,
       }}
     >

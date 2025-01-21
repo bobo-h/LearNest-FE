@@ -13,16 +13,9 @@ import { Unit, Subunit } from "../../types/unitTypes";
 interface EditUnitListProps {
   units: Unit[];
   setUnits: Dispatch<SetStateAction<Unit[]>>;
-  subunits: Subunit[];
-  setSubunits: Dispatch<SetStateAction<Subunit[]>>;
 }
 
-const EditUnitList: React.FC<EditUnitListProps> = ({
-  units,
-  setUnits,
-  subunits,
-  setSubunits,
-}) => {
+const EditUnitList: React.FC<EditUnitListProps> = ({ units, setUnits }) => {
   const { classId: classIdParams } = useParams<{ classId: string }>();
   const classId = Number(classIdParams);
   const navigate = useNavigate();
@@ -35,6 +28,7 @@ const EditUnitList: React.FC<EditUnitListProps> = ({
     const newUnit: Unit = {
       type: "create",
       id: Date.now(),
+      sort_order: units.length + 1,
       name: `단원 ${units.length + 1}`,
       description: "",
       subunits: [],
@@ -48,24 +42,25 @@ const EditUnitList: React.FC<EditUnitListProps> = ({
       alert("소단원을 추가하려면 단원을 먼저 선택해주세요.");
       return;
     }
-    const newSubunit: Subunit = {
-      type: "create",
-      id: Date.now(),
-      unit_id: selectedUnitId,
-      name: `소단원 ${
-        subunits.filter((s) => s.unit_id === selectedUnitId).length + 1
-      }`,
-      description: "",
-      content: "",
-      materials_path: "",
-    };
-
-    setSubunits((prevSubunits) => [...prevSubunits, newSubunit]);
-
     setUnits((prevUnits) =>
       prevUnits.map((unit) =>
         unit.id === selectedUnitId
-          ? { ...unit, subunits: [...unit.subunits, newSubunit] }
+          ? {
+              ...unit,
+              subunits: [
+                ...unit.subunits,
+                {
+                  type: "create",
+                  id: Date.now(),
+                  unit_id: selectedUnitId,
+                  sort_order: unit.subunits.length + 1,
+                  name: `소단원 ${unit.subunits.length + 1}`,
+                  description: "",
+                  content: "",
+                  materials_path: "",
+                },
+              ],
+            }
           : unit
       )
     );
@@ -88,54 +83,39 @@ const EditUnitList: React.FC<EditUnitListProps> = ({
           )
           .filter((unit) => unit !== null) as Unit[]
     );
-    setSubunits((prevSubunits: Subunit[]) =>
-      prevSubunits.filter((subunit) => subunit.unit_id !== selectedUnitId)
-    );
     setSelectedUnitId(null);
   };
 
   const handleRemoveSubunit = () => {
-    if (!selectedUnitId) {
-      alert("단원을 먼저 선택하세요.");
+    if (!selectedSubunitId) {
+      alert("삭제할 소단원을 선택하세요.");
       return;
     }
-    const subunitsInUnit = subunits.filter(
-      (subunit) => subunit.unit_id === selectedUnitId
-    );
-    if (subunitsInUnit.length === 0) {
-      alert("삭제할 소단원이 없습니다.");
-      return;
-    }
-    const lastSubunit = subunitsInUnit[subunitsInUnit.length - 1];
-    setSubunits(
-      (prevSubunits) =>
-        prevSubunits
-          .map((subunit) =>
-            subunit.id === lastSubunit.id
-              ? subunit.type === undefined
-                ? { ...subunit, type: "delete" }
-                : null
-              : subunit
-          )
-          .filter((subunit) => subunit !== null) as Subunit[]
-    );
+
     setUnits((prevUnits) =>
       prevUnits.map((unit) =>
         unit.id === selectedUnitId
           ? {
               ...unit,
-              subunits: unit.subunits.filter(
-                (subunit) => subunit.id !== lastSubunit.id
-              ),
+              subunits: unit.subunits
+                .map((subunit) =>
+                  subunit.id === selectedSubunitId
+                    ? subunit.type === undefined
+                      ? { ...subunit, type: "delete" }
+                      : null
+                    : subunit
+                )
+                .filter((subunit) => subunit !== null) as Subunit[],
             }
           : unit
       )
     );
+    setSelectedSubunitId(null);
   };
 
   const handleSelectUnit = (unitId: number) => {
-    setSelectedUnitId(unitId);
     setSelectedSubunitId(null);
+    setSelectedUnitId(unitId);
     navigate(
       `/app/class-management/${classId}/units-edit/unit/${unitId}/detail`
     );
@@ -171,28 +151,32 @@ const EditUnitList: React.FC<EditUnitListProps> = ({
       >
         {units.length > 0 ? (
           <List>
-            {units.map((unit) => (
-              <React.Fragment key={unit.id}>
-                <ListItemButton
-                  selected={unit.id === selectedUnitId}
-                  onClick={() => handleSelectUnit(unit.id)}
-                >
-                  <ListItemText primary={unit.name} />
-                </ListItemButton>
-                {subunits
-                  .filter((subunit) => subunit.unit_id === unit.id)
-                  .map((subunit) => (
-                    <ListItemButton
-                      key={subunit.id}
-                      sx={{ pl: 4 }}
-                      selected={subunit.id === selectedSubunitId}
-                      onClick={() => handleSelectSubunit(unit.id, subunit.id)}
-                    >
-                      <ListItemText primary={`- ${subunit.name}`} />
-                    </ListItemButton>
-                  ))}
-              </React.Fragment>
-            ))}
+            {units
+              .filter((unit) => unit.type !== "delete")
+              .map((unit) => (
+                <React.Fragment key={unit.id}>
+                  <ListItemButton
+                    selected={
+                      unit.id === selectedUnitId && selectedSubunitId === null
+                    }
+                    onClick={() => handleSelectUnit(unit.id)}
+                  >
+                    <ListItemText primary={unit.name} />
+                  </ListItemButton>
+                  {unit.subunits
+                    .filter((subunit) => subunit.type !== "delete")
+                    .map((subunit) => (
+                      <ListItemButton
+                        key={subunit.id}
+                        sx={{ pl: 4 }}
+                        selected={subunit.id === selectedSubunitId}
+                        onClick={() => handleSelectSubunit(unit.id, subunit.id)}
+                      >
+                        <ListItemText primary={`- ${subunit.name}`} />
+                      </ListItemButton>
+                    ))}
+                </React.Fragment>
+              ))}
           </List>
         ) : (
           <Typography>아직 단원이 없습니다.</Typography>

@@ -5,7 +5,7 @@ export const getUnitsWithSubunits = async (
   classId: number
 ): Promise<UnitsResponse> => {
   const response = await apiClient.get(`/classes/${classId}/units`);
-  return response.data.units;
+  return response.data;
 };
 
 export const fetchUnitsWithSubunits = async (

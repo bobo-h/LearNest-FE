@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { useEffect, Dispatch, SetStateAction } from "react";
 import { useParams, useOutletContext } from "react-router-dom";
 import { Box, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
@@ -13,14 +13,30 @@ interface OutletContext {
 const EditUnitDetailPage: React.FC = () => {
   const { unitId: unitIdParam } = useParams<{ unitId: string }>();
   const { units, setUnits } = useOutletContext<OutletContext>();
+  const { control, reset } = useForm();
+
   const unitId = Number(unitIdParam);
-  const { control } = useForm();
   const currentUnit = units.find((unit) => unit.id === unitId);
+
+  useEffect(() => {
+    if (currentUnit) {
+      reset({
+        name: currentUnit.name || "",
+        description: currentUnit.description || "",
+      });
+    }
+  }, [currentUnit, reset]);
 
   const handleChange = (field: keyof Unit, value: string) => {
     setUnits((prevUnits) =>
       prevUnits.map((unit) =>
-        unit.id === unitId ? { ...unit, [field]: value } : unit
+        unit.id === unitId
+          ? {
+              ...unit,
+              [field]: value,
+              type: unit.type || "update",
+            }
+          : unit
       )
     );
   };
@@ -39,15 +55,12 @@ const EditUnitDetailPage: React.FC = () => {
         control={control}
         label="단원 이름"
         rules={{ required: "단원 이름을 입력해주세요." }}
-        error={undefined}
-        defaultValue={currentUnit.name || ""}
         onChange={(e) => handleChange("name", e.target.value)}
       />
       <FormInput
         name="description"
         control={control}
         label="간단한 단원 설명"
-        defaultValue={currentUnit.description || ""}
         onChange={(e) => handleChange("description", e.target.value)}
       />
     </Box>

@@ -8,11 +8,9 @@ import { useFetchUnitsWithSubunits } from "../hooks/useUnits";
 
 const UnitsEditorLayout: React.FC = () => {
   const { classId } = useParams<{ classId: string }>();
-  const { units, subunits, setUnits, setSubunits, clearUnitChanges } =
-    useUnitContext();
+  const { units, setUnits, clearUnitChanges } = useUnitContext();
   const { mutate, isPending } = useFetchUnitsWithSubunits(Number(classId));
   console.log("Units: ", units);
-  console.log("Subunits: ", subunits);
 
   const handleSave = () => {
     const changedUnits = units.filter(
@@ -38,12 +36,7 @@ const UnitsEditorLayout: React.FC = () => {
 
   return (
     <Box sx={{ display: "flex", height: "100%" }}>
-      <EditUnitList
-        units={units}
-        setUnits={setUnits}
-        subunits={subunits}
-        setSubunits={setSubunits}
-      />
+      <EditUnitList units={units} setUnits={setUnits} />
       <Box
         sx={{
           display: "flex",
@@ -64,7 +57,7 @@ const UnitsEditorLayout: React.FC = () => {
             marginLeft: 2,
           }}
         >
-          <Outlet context={{ units, setUnits, subunits, setSubunits }} />
+          <Outlet context={{ units, setUnits }} />
         </Box>
 
         <Box
