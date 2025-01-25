@@ -6,6 +6,8 @@ import CssBaseline from "@mui/material/CssBaseline";
 import theme from "./theme/theme";
 import reportWebVitals from "./reportWebVitals";
 import App from "./App";
+import "react-quill-new/dist/quill.snow.css";
+import "./index.css";
 
 const queryClient = new QueryClient();
 

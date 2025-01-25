@@ -1,5 +1,5 @@
 import React, { useEffect, Dispatch, SetStateAction } from "react";
-import { useParams, useOutletContext } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 import { Box, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
 import FormInput from "../../../../components/common/FormInput";
@@ -8,15 +8,14 @@ import { Unit } from "../../../../types/unitTypes";
 interface OutletContext {
   units: Unit[];
   setUnits: Dispatch<SetStateAction<Unit[]>>;
+  selectedUnitId: number | null;
 }
 
 const EditUnitDetailPage: React.FC = () => {
-  const { unitId: unitIdParam } = useParams<{ unitId: string }>();
-  const { units, setUnits } = useOutletContext<OutletContext>();
+  const { units, setUnits, selectedUnitId } = useOutletContext<OutletContext>();
   const { control, reset } = useForm();
 
-  const unitId = Number(unitIdParam);
-  const currentUnit = units.find((unit) => unit.id === unitId);
+  const currentUnit = units.find((unit) => unit.id === selectedUnitId);
 
   useEffect(() => {
     if (currentUnit) {
@@ -30,7 +29,7 @@ const EditUnitDetailPage: React.FC = () => {
   const handleChange = (field: keyof Unit, value: string) => {
     setUnits((prevUnits) =>
       prevUnits.map((unit) =>
-        unit.id === unitId
+        unit.id === selectedUnitId
           ? {
               ...unit,
               [field]: value,

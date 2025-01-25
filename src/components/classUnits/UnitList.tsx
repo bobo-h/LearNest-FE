@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Box,
   Typography,
@@ -7,52 +7,35 @@ import {
   ListItemButton,
   ListItemText,
 } from "@mui/material";
-import { useParams } from "react-router-dom";
-import { useGetUnitsWithSubunits } from "../../hooks/useUnits";
-import { useUnitContext } from "../../contexts/UnitContext";
-import { Unit } from "../../types/unitTypes";
+import { Unit, Subunit } from "../../types/unitTypes";
 
 interface UnitListProps {
-  onSelect: (unit: Unit) => void;
+  units: Unit[];
+  onUnitSelect: (unit: Unit) => void;
+  onSubunitSelect: (subunit: Subunit) => void;
 }
 
-const UnitList: React.FC<UnitListProps> = ({ onSelect }) => {
-  const { classId } = useParams<{ classId: string }>();
-  const {
-    data: unitsResponse,
-    isLoading,
-    error,
-  } = useGetUnitsWithSubunits(Number(classId));
-  const { setUnits } = useUnitContext();
-
-  useEffect(() => {
-    if (unitsResponse?.units) {
-      setUnits(unitsResponse.units);
-    }
-  }, [unitsResponse, setUnits]);
-
-  if (isLoading) return <Typography>로딩 중...</Typography>;
-  if (error) return <Typography>오류가 발생했습니다.</Typography>;
-
-  const units = unitsResponse?.units || [];
-
+const UnitList: React.FC<UnitListProps> = ({
+  units,
+  onUnitSelect,
+  onSubunitSelect,
+}) => {
   return (
     <Box>
       {units.length > 0 ? (
         <List>
           {units.map((unit) => (
             <React.Fragment key={unit.id}>
-              <ListItemButton onClick={() => onSelect(unit)}>
-                <ListItemText
-                  primary={unit.name}
-                  secondary={unit.description || ""}
-                />
+              <ListItemButton onClick={() => onUnitSelect(unit)}>
+                <ListItemText primary={unit.name} />
               </ListItemButton>
               {unit.subunits && unit.subunits.length > 0 && (
-                <List sx={{ pl: 4 }}>
+                <List>
                   {unit.subunits.map((subunit) => (
                     <ListItem key={subunit.id}>
-                      <ListItemText primary={subunit.name} />
+                      <ListItemButton onClick={() => onSubunitSelect(subunit)}>
+                        <ListItemText primary={subunit.name} />
+                      </ListItemButton>
                     </ListItem>
                   ))}
                 </List>

@@ -1,45 +1,46 @@
 import React, { useEffect, Dispatch, SetStateAction } from "react";
-import { useParams, useOutletContext } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import FormInput from "../../../../components/common/FormInput";
 import FileInput from "../../../../components/common/FileInput";
 import { Unit, Subunit } from "../../../../types/unitTypes";
+import ContentInput from "./../../../../components/common/ContentInput";
 
 interface OutletContext {
   units: Unit[];
   setUnits: Dispatch<SetStateAction<Unit[]>>;
+  selectedSubunitId: number | null;
 }
 
 const EditSubunitDetailPage: React.FC = () => {
-  const { subunitId: subunitIdParams } = useParams<{ subunitId: string }>();
-  const { units, setUnits } = useOutletContext<OutletContext>();
+  const { units, setUnits, selectedSubunitId } =
+    useOutletContext<OutletContext>();
   const { control, reset } = useForm();
 
-  const subunitId = Number(subunitIdParams);
   const currentSubunit = units
     .flatMap((unit) => unit.subunits)
-    .find((subunit) => subunit.id === subunitId);
+    .find((subunit) => subunit.id === selectedSubunitId);
 
   useEffect(() => {
     if (currentSubunit) {
       reset({
         name: currentSubunit.name || "",
         description: currentSubunit.description || "",
-        content: currentSubunit.content || "",
+        content: currentSubunit.content || {},
         materials_path: currentSubunit.materials_path || "",
       });
     }
-  }, [currentSubunit, reset]);
+  }, [reset, currentSubunit]);
 
-  const handleChange = (field: keyof Subunit, value: string) => {
+  const handleChange = (field: keyof Subunit, value: string | object) => {
     setUnits((prevUnits) =>
       prevUnits.map((unit) =>
         unit.id === currentSubunit?.unit_id
           ? {
               ...unit,
               subunits: unit.subunits.map((subunit) =>
-                subunit.id === subunitId
+                subunit.id === selectedSubunitId
                   ? {
                       ...subunit,
                       [field]: value,
@@ -62,8 +63,6 @@ const EditSubunitDetailPage: React.FC = () => {
       <Typography variant="h6" sx={{ marginBottom: 2 }}>
         소단원 상세 정보
       </Typography>
-
-      {/* 소단원 이름 */}
       <FormInput
         name="name"
         control={control}
@@ -71,21 +70,20 @@ const EditSubunitDetailPage: React.FC = () => {
         rules={{ required: "소단원 이름을 입력해주세요." }}
         onChange={(e) => handleChange("name", e.target.value)}
       />
-
-      {/* 소단원 설명 */}
       <FormInput
         name="description"
         control={control}
         label="간단한 소단원 설명"
         onChange={(e) => handleChange("description", e.target.value)}
       />
-
-      {/* 소단원 콘텐츠 */}
-      <FormInput
+      <ContentInput
         name="content"
         control={control}
-        label="소단원 콘텐츠"
-        onChange={(e) => handleChange("content", e.target.value)}
+        label="소단원 내용"
+        initialContent={currentSubunit.content || []}
+        onChange={(deltaContent) => {
+          handleChange("content", deltaContent);
+        }}
       />
 
       {/* 자료 업로드 */}

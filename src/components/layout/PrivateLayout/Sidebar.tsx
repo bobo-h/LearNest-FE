@@ -56,7 +56,7 @@ const Sidebar: React.FC = () => {
   return (
     <Box
       sx={{
-        width: 240,
+        width: "15%",
         height: "100%",
         backgroundColor: "background.paper",
         display: "flex",

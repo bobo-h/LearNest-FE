@@ -1,4 +1,4 @@
-import React, { useState, Dispatch, SetStateAction } from "react";
+import React from "react";
 import {
   Box,
   Button,
@@ -7,22 +7,27 @@ import {
   ListItemButton,
   ListItemText,
 } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Unit, Subunit } from "../../types/unitTypes";
 
 interface EditUnitListProps {
   units: Unit[];
-  setUnits: Dispatch<SetStateAction<Unit[]>>;
+  setUnits: React.Dispatch<React.SetStateAction<Unit[]>>;
+  selectedUnitId: number | null;
+  setSelectedUnitId: React.Dispatch<React.SetStateAction<number | null>>;
+  selectedSubunitId: number | null;
+  setSelectedSubunitId: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
-const EditUnitList: React.FC<EditUnitListProps> = ({ units, setUnits }) => {
-  const { classId: classIdParams } = useParams<{ classId: string }>();
-  const classId = Number(classIdParams);
+const EditUnitList: React.FC<EditUnitListProps> = ({
+  units,
+  setUnits,
+  selectedUnitId,
+  setSelectedUnitId,
+  selectedSubunitId,
+  setSelectedSubunitId,
+}) => {
   const navigate = useNavigate();
-  const [selectedUnitId, setSelectedUnitId] = useState<number | null>(null);
-  const [selectedSubunitId, setSelectedSubunitId] = useState<number | null>(
-    null
-  );
 
   const handleAddUnit = () => {
     const newUnit: Unit = {
@@ -116,17 +121,13 @@ const EditUnitList: React.FC<EditUnitListProps> = ({ units, setUnits }) => {
   const handleSelectUnit = (unitId: number) => {
     setSelectedSubunitId(null);
     setSelectedUnitId(unitId);
-    navigate(
-      `/app/class-management/${classId}/units-edit/unit/${unitId}/detail`
-    );
+    navigate(`units/${unitId}`);
   };
 
   const handleSelectSubunit = (unitId: number, subunitId: number) => {
     setSelectedUnitId(unitId);
     setSelectedSubunitId(subunitId);
-    navigate(
-      `/app/class-management/${classId}/units-edit/unit/${unitId}/subunit/${subunitId}/detail`
-    );
+    navigate(`units/${unitId}/subunits/${subunitId}`);
   };
 
   return (
