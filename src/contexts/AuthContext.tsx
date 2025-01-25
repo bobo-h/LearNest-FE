@@ -11,13 +11,13 @@ interface User {
   role: string;
 }
 
-interface AuthContextType {
+interface AuthContextProps {
   user: User | null;
   login: (user: User, token: string) => void;
   logout: () => void;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 interface AuthProviderProps {
   children: ReactNode;

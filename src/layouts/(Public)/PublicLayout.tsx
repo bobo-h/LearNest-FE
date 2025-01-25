@@ -1,6 +1,6 @@
 import React from "react";
 import { Box } from "@mui/material";
-import Header from "../components/layout/PublicLayout/Header";
+import Header from "../../components/layout/PublicLayout/Header";
 import { Outlet } from "react-router-dom";
 
 const PublicLayout: React.FC = () => {

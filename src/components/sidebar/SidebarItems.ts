@@ -16,7 +16,7 @@ export const SidebarItems: Record<"user" | "admin", SidebarItem[]> = {
       name: "생성한 클래스",
       subMenu: [
         { id: "members", name: "멤버 관리" },
-        { id: "manage", name: "클래스 관리" },
+        { id: "units", name: "클래스 관리" },
       ],
     },
     { id: "joined_classes", name: "참가한 클래스" },

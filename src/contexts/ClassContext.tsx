@@ -1,29 +1,29 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import { useGetUserClasses } from "../hooks/useClasses";
 import { Class } from "../types/classTypes";
 
-interface ClassContextValue {
-  createdClasses: Class[];
-  joinedClasses: Class[];
+interface ClassContextProps {
+  selectedClass: Class | null;
+  selectClass: (classData: Class) => void;
 }
 
-const ClassContext = createContext<ClassContextValue | undefined>(undefined);
+const ClassContext = createContext<ClassContextProps | undefined>(undefined);
 
 interface ClassProviderProps {
   children?: ReactNode;
 }
 
 export const ClassProvider = ({ children }: ClassProviderProps) => {
-  const { data } = useGetUserClasses();
+  const [selectedClass, setSelectedClass] = useState<Class | null>(null);
 
-  const createdClasses = data?.created_classes ?? [];
-  const joinedClasses = data?.joined_classes ?? [];
+  const selectClass = (classData: Class) => {
+    setSelectedClass(classData);
+  };
 
   return (
     <ClassContext.Provider
       value={{
-        createdClasses,
-        joinedClasses,
+        selectedClass,
+        selectClass,
       }}
     >
       {children}
