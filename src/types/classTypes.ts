@@ -15,3 +15,10 @@ export interface UserClassesResponse {
   created_classes: Class[];
   joined_classes: Class[];
 }
+
+export interface ClassFormData {
+  name: string;
+  description?: string;
+  visibility: "public" | "private";
+  mainImageUrl?: string;
+}

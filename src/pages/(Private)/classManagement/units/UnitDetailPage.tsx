@@ -79,7 +79,6 @@ const UnitDetailPage: React.FC = () => {
             {selectedSubunit.content && (
               <ContentInput
                 name="content"
-                label="소단원 내용"
                 initialContent={selectedSubunit.content}
                 readOnly={true}
               />

@@ -72,10 +72,10 @@ const UnitsLayout: React.FC = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          height: "100vh",
+          height: "100%",
         }}
       >
-        <Typography variant="h4">잠시 후 오픈됩니다.</Typography>
+        <Typography variant="h5">잠시 후 오픈됩니다.</Typography>
       </Box>
     );
   }

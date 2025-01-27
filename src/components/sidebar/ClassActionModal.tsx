@@ -1,16 +1,11 @@
 import React, { useState } from "react";
 import { Box, Typography, Button } from "@mui/material";
-import ClassCreateModal from "../modals/ClassCreateModal";
+import EditClassModal from "../modals/EditClassModal";
+import JoinClassModal from "../modals/JoinClassModal";
 
-interface ClassActionModalProps {
-  onClose: () => void;
-}
-
-const ClassActionModal: React.FC<ClassActionModalProps> = ({ onClose }) => {
-  const [isCreateModalOpen, setCreateModalOpen] = useState(false);
-
-  const handleOpenCreateModal = () => setCreateModalOpen(true);
-  const handleCloseCreateModal = () => setCreateModalOpen(false);
+const ClassActionModal: React.FC = () => {
+  const [isInviteModalOpen, setInviteModalOpen] = useState(false);
+  const [isJoinModalOpen, setJoinModalOpen] = useState(false);
 
   return (
     <>
@@ -34,17 +29,25 @@ const ClassActionModal: React.FC<ClassActionModalProps> = ({ onClose }) => {
           variant="contained"
           fullWidth
           sx={{ marginBottom: "8px" }}
-          onClick={handleOpenCreateModal}
+          onClick={() => setInviteModalOpen(true)}
         >
           생성하기
         </Button>
-        <Button variant="outlined" fullWidth onClick={onClose}>
+        <Button
+          variant="outlined"
+          fullWidth
+          onClick={() => setJoinModalOpen(true)}
+        >
           참가하기
         </Button>
       </Box>
-      <ClassCreateModal
-        open={isCreateModalOpen}
-        onClose={handleCloseCreateModal}
+      <EditClassModal
+        open={isInviteModalOpen}
+        onClose={() => setInviteModalOpen(false)}
+      />
+      <JoinClassModal
+        open={isJoinModalOpen}
+        onClose={() => setJoinModalOpen(false)}
       />
     </>
   );

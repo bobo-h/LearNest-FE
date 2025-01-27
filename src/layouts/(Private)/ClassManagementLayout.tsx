@@ -15,8 +15,12 @@ const ClassManagementLayout: React.FC = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const isUnitsLayoutRoute = matchPath(
+  const editUnitsLayoutRoute = matchPath(
     `/app/class-management/${classId}/units/*`,
+    location.pathname
+  );
+  const manageMemberLayoutRoute = matchPath(
+    `/app/class-management/${classId}/members/*`,
     location.pathname
   );
 
@@ -43,10 +47,13 @@ const ClassManagementLayout: React.FC = () => {
             </Typography>
           )}
         </Box>
-        {isUnitsLayoutRoute && (
+        {editUnitsLayoutRoute && (
           <Button variant="contained" onClick={() => navigate("units-edit")}>
             학습 설정
           </Button>
+        )}
+        {manageMemberLayoutRoute && (
+          <Button variant="contained">멤버 설정</Button>
         )}
       </Box>
       <Box sx={{ flex: 1, py: 3 }}>

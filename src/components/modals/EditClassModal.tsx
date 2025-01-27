@@ -5,23 +5,14 @@ import FormInput from "../common/FormInput";
 import FormRadio from "../common/FormRadio";
 import { uploadToCloudinary } from "../../utils/uploadToCloudinary";
 import { useCreateClass } from "../../hooks/useClasses";
+import { ClassFormData } from "./../../types/classTypes";
 
-interface ClassCreateModalProps {
+interface EditClassModalProps {
   open: boolean;
   onClose: () => void;
 }
 
-interface ClassFormData {
-  name: string;
-  description?: string;
-  visibility: "public" | "private";
-  mainImageUrl?: string;
-}
-
-const ClassCreateModal: React.FC<ClassCreateModalProps> = ({
-  open,
-  onClose,
-}) => {
+const EditClassModal: React.FC<EditClassModalProps> = ({ open, onClose }) => {
   const { handleSubmit, control, reset } = useForm<ClassFormData>({
     defaultValues: {
       visibility: "private",
@@ -140,4 +131,4 @@ const ClassCreateModal: React.FC<ClassCreateModalProps> = ({
   );
 };
 
-export default ClassCreateModal;
+export default EditClassModal;
