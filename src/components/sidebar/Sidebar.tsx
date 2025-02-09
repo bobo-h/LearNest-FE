@@ -18,6 +18,8 @@ import { useGetUserClasses } from "../../hooks/useClasses";
 import { SidebarMenus } from "../../constants/menus";
 import { MENU_IDS, SUBMENU_IDS } from "../../constants/menuItems";
 import InviteClassModal from "../modals/InviteClassModal";
+import EditClassModal from "components/modals/EditClassModal";
+import { ClassFormData } from "./../../types/classTypes";
 
 const Sidebar: React.FC = () => {
   const { user } = useAuth();
@@ -28,9 +30,38 @@ const Sidebar: React.FC = () => {
 
   const [openSubItems, setOpenSubItems] = useState<Record<number, boolean>>({});
   const [isInviteModalOpen, setInviteModalOpen] = useState(false);
-  const [selectedClassId, setSelectedClassId] = useState<number | null>(null);
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const [selectedClass, setSelectedClass] = useState<
+    (ClassFormData & { id?: number }) | null
+  >(null);
 
   const navigate = useNavigate();
+
+  const getSelectedClass = (classId: number) => {
+    return (
+      classData?.created_classes.find((cls) => cls.id === classId) ||
+      classData?.joined_classes.find((cls) => cls.id === classId)
+    );
+  };
+
+  const openModalForClass = (classId: number, modalType: "edit" | "invite") => {
+    const selected = getSelectedClass(classId);
+    if (!selected) return;
+
+    setSelectedClass(selected);
+
+    if (modalType === "edit") {
+      setEditModalOpen(true);
+    } else {
+      setInviteModalOpen(true);
+    }
+  };
+
+  const handleCloseModals = () => {
+    setEditModalOpen(false);
+    setInviteModalOpen(false);
+    setSelectedClass(null);
+  };
 
   const handleSubMenuToggle = (classId: number) => {
     setOpenSubItems((prev) => ({
@@ -40,13 +71,12 @@ const Sidebar: React.FC = () => {
   };
 
   const handleSubMenuClick = (subMenuId: string, classId: number) => {
-    const selectedClass = classData?.created_classes.find(
-      (cls) => cls.id === classId
-    );
+    const selectedClass = getSelectedClass(classId);
     if (!selectedClass) return;
-
     selectClass(selectedClass);
-    navigate(`/app/class-management/${classId}/${subMenuId}`);
+    const normalizedSubMenuId =
+      subMenuId === SUBMENU_IDS.STUDY ? SUBMENU_IDS.UNITS : subMenuId;
+    navigate(`/app/classes/${classId}/${normalizedSubMenuId}`);
   };
 
   const getClassData = (id: string) => {
@@ -57,15 +87,6 @@ const Sidebar: React.FC = () => {
       return classData?.joined_classes || [];
     }
     return [];
-  };
-
-  const handleOpenInviteModal = (classId: number) => {
-    setSelectedClassId(classId);
-    setInviteModalOpen(true);
-  };
-
-  const handleCloseInviteModal = () => {
-    setInviteModalOpen(false);
   };
 
   return (
@@ -117,8 +138,7 @@ const Sidebar: React.FC = () => {
                           onClick={() => handleSubMenuToggle(child.id)}
                         >
                           <ListItemText primary={child.name} />
-                          {menu.subMenu &&
-                            menu.subMenu.length > 0 &&
+                          {menu.subMenu.length > 0 &&
                             (openSubItems[child.id] ? (
                               <ExpandLess />
                             ) : (
@@ -152,7 +172,7 @@ const Sidebar: React.FC = () => {
                                   <IconButton
                                     onClick={(e) => {
                                       e.stopPropagation();
-                                      handleOpenInviteModal(child.id);
+                                      openModalForClass(child.id, "invite");
                                     }}
                                     sx={{
                                       width: 25,
@@ -171,7 +191,7 @@ const Sidebar: React.FC = () => {
                                   <IconButton
                                     onClick={(e) => {
                                       e.stopPropagation();
-                                      console.log("클래스 설정");
+                                      openModalForClass(child.id, "edit");
                                     }}
                                     sx={{
                                       width: 25,
@@ -202,12 +222,20 @@ const Sidebar: React.FC = () => {
         ))}
       </List>
 
-      {selectedClassId && (
-        <InviteClassModal
-          open={isInviteModalOpen}
-          onClose={handleCloseInviteModal}
-          classId={selectedClassId}
-        />
+      {selectedClass && (
+        <>
+          <EditClassModal
+            open={isEditModalOpen}
+            onClose={handleCloseModals}
+            mode="edit"
+            initialData={selectedClass}
+          />
+          <InviteClassModal
+            open={isInviteModalOpen}
+            onClose={handleCloseModals}
+            classId={selectedClass.id!}
+          />
+        </>
       )}
 
       {role === "user" && (

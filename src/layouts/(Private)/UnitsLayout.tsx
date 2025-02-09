@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Typography, Box } from "@mui/material";
 import { useParams, useNavigate, Outlet } from "react-router-dom";
 import { Unit, Subunit } from "../../types/unitTypes";
-import { useGetUnitsWithSubunits } from "../../hooks/useUnits";
+import { useGetUnitsWithDetails } from "../../hooks/useUnits";
 import UnitList from "../../components/classUnits/UnitList";
 
 const UnitsLayout: React.FC = () => {
@@ -11,7 +11,7 @@ const UnitsLayout: React.FC = () => {
     unitId: string;
     subunitId: string;
   }>();
-  const { data: unitsResponse } = useGetUnitsWithSubunits(Number(classId));
+  const { data: unitsResponse } = useGetUnitsWithDetails(Number(classId));
 
   const [selectedUnit, setSelectedUnit] = useState<Unit | null>(null);
   const [selectedSubunit, setSelectedSubunit] = useState<Subunit | null>(null);

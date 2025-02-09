@@ -1,6 +1,8 @@
+import { ROLES } from "./role";
+
 export const TITLE_ITEMS = {
-  ADMIN: "관리자 메뉴",
-  USER: "나의 클래스",
+  [ROLES.ADMIN]: "관리자 메뉴",
+  [ROLES.USER]: "나의 클래스",
 };
 
 export const MENU_IDS = {
@@ -20,9 +22,17 @@ export const MENU_ITEMS = {
 export const SUBMENU_IDS = {
   MEMBERS: "members",
   UNITS: "units",
+  STUDY: "study",
+  QNA: "qna",
+  USER_STATS: "user_stats",
+  ADMIN_MANAGE: "admin_manage",
 };
 
 export const SUBMENU_ITEMS = {
   [SUBMENU_IDS.MEMBERS]: "멤버 관리",
   [SUBMENU_IDS.UNITS]: "클래스 관리",
+  [SUBMENU_IDS.STUDY]: "학습 하기",
+  [SUBMENU_IDS.QNA]: "질문 하기",
+  [SUBMENU_IDS.USER_STATS]: "유저 통계",
+  [SUBMENU_IDS.ADMIN_MANAGE]: "관리자 설정",
 };

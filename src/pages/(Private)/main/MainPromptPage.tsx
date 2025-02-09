@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { useGetUserClasses } from "../../../hooks/useClasses";
-import ClassCreateModal from "../../../components/modals/EditClassModal";
-import EditClassModal from "./../../../components/modals/EditClassModal";
-import JoinClassModal from "./../../../components/modals/JoinClassModal";
+import EditClassModal from "../../../components/modals/EditClassModal";
+import JoinClassModal from "../../../components/modals/JoinClassModal";
 
-const ClassPromptPage: React.FC = () => {
+const MainPromptPage: React.FC = () => {
   const { data: classes } = useGetUserClasses();
   const [isInviteModalOpen, setInviteModalOpen] = useState(false);
   const [isJoinModalOpen, setJoinModalOpen] = useState(false);
@@ -43,6 +42,7 @@ const ClassPromptPage: React.FC = () => {
           <EditClassModal
             open={isInviteModalOpen}
             onClose={() => setInviteModalOpen(false)}
+            mode="create"
           />
           <JoinClassModal
             open={isJoinModalOpen}
@@ -58,4 +58,4 @@ const ClassPromptPage: React.FC = () => {
   );
 };
 
-export default ClassPromptPage;
+export default MainPromptPage;

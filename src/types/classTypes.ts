@@ -18,7 +18,7 @@ export interface UserClassesResponse {
 
 export interface ClassFormData {
   name: string;
-  description?: string;
+  description?: string | null;
   visibility: "public" | "private";
-  mainImageUrl?: string;
+  mainImageUrl?: string | null;
 }

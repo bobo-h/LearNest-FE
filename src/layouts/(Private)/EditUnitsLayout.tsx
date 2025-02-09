@@ -1,25 +1,19 @@
-import React, {
-  useState,
-  useEffect,
-  useCallback,
-  Dispatch,
-  SetStateAction,
-} from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Box, Button } from "@mui/material";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import EditUnitList from "../../components/classUnits/EditUnitList";
 import {
-  useGetUnitsWithSubunits,
-  useFetchUnitsWithSubunits,
+  useBatchProcessUnits,
+  useGetUnitsWithDetails,
 } from "../../hooks/useUnits";
 import { useUnitContext } from "../../contexts/UnitContext";
 
 const EditUnitsLayout: React.FC = () => {
   const { units, setUnits, clearUnitChanges } = useUnitContext();
   const { classId } = useParams<{ classId: string }>();
-  const { mutate, isPending } = useFetchUnitsWithSubunits(Number(classId));
-  const { data: unitsResponse } = useGetUnitsWithSubunits(Number(classId));
+  const { mutate, isPending } = useBatchProcessUnits(Number(classId));
+  const { data: unitsResponse } = useGetUnitsWithDetails(Number(classId));
 
   const [selectedUnitId, setSelectedUnitId] = useState<number | null>(null);
   const [selectedSubunitId, setSelectedSubunitId] = useState<number | null>(
@@ -53,29 +47,25 @@ const EditUnitsLayout: React.FC = () => {
   const handleSave = () => {
     // 변경된 units 필터링
     const changedUnits = units.filter(
-      (unit) => unit.type || unit.subunits.some((subunit) => subunit.type)
+      (unit) =>
+        unit.type ||
+        unit.subunits.some(
+          (subunit) =>
+            subunit.type ||
+            (subunit.assignments &&
+              subunit.assignments.some((assignment) => assignment.type))
+        )
     );
     if (changedUnits.length === 0) {
       alert("변경 사항이 없습니다.");
       return;
     }
-    // json 문자열로 변환
-    const transformedUnits = changedUnits.map((unit) => ({
-      ...unit,
-      subunits: unit.subunits.map((subunit) => ({
-        ...subunit,
-        content:
-          typeof subunit.content === "object"
-            ? JSON.stringify(subunit.content)
-            : subunit.content,
-      })),
-    }));
 
-    mutate(transformedUnits, {
+    mutate(changedUnits, {
       onSuccess: () => {
         clearUnitChanges();
         alert("변경 사항이 저장되었습니다.");
-        navigate(`/app/class-management/${classId}/units`);
+        navigate(`/app/classes/${classId}/units`);
       },
       onError: (error: any) => {
         console.error("Error saving changes:", error);

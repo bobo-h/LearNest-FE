@@ -11,3 +11,19 @@ export const createClass = async (classData: ClassFormData) => {
   const response = await apiClient.post("/classes", classData);
   return response.data.class;
 };
+
+export const updateClass = async ({
+  classId,
+  classData,
+}: {
+  classId: number;
+  classData: ClassFormData;
+}) => {
+  const response = await apiClient.put(`/classes/${classId}`, classData);
+  return response.data.class;
+};
+
+export const deleteClass = async (classId: number) => {
+  const response = await apiClient.delete(`/classes/${classId}`);
+  return response.data;
+};

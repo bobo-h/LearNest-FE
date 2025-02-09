@@ -11,6 +11,7 @@ export const useLogin = () => {
       if (data?.user && data?.token) {
         loginContext(data.user, data.token);
       }
+      alert(`${data.user.name}님 환영합니다.`);
     },
     onError: (error: any) => {
       console.error("Login Error:", error);

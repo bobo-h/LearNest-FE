@@ -1,3 +1,5 @@
+import { Delta } from "quill";
+
 export interface UnitsResponse {
   status: string;
   message: string;
@@ -20,6 +22,16 @@ export interface Subunit {
   sort_order: number;
   name: string;
   description: string | null;
-  content: any | null;
+  content: Delta | null;
   materials_path?: string | null;
+  assignments?: Assignment[];
+}
+
+export interface Assignment {
+  type?: "create" | "update" | "delete";
+  id: number;
+  subunit_id: number;
+  title: string;
+  content: Delta | null;
+  attachment?: string | null;
 }

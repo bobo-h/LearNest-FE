@@ -44,6 +44,7 @@ const ClassActionModal: React.FC = () => {
       <EditClassModal
         open={isInviteModalOpen}
         onClose={() => setInviteModalOpen(false)}
+        mode="create"
       />
       <JoinClassModal
         open={isJoinModalOpen}

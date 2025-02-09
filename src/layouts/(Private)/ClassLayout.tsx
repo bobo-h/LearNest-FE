@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Box, Button, Typography } from "@mui/material";
 import {
   Outlet,
@@ -8,20 +8,25 @@ import {
   matchPath,
 } from "react-router-dom";
 import { useClassContext } from "../../contexts/ClassContext";
+import { CLASS_ROLES } from "constants/role";
 
-const ClassManagementLayout: React.FC = () => {
+const ClassLayout: React.FC = () => {
   const { selectedClass } = useClassContext();
   const { classId } = useParams<{ classId: string }>();
 
   const navigate = useNavigate();
   const location = useLocation();
   const editUnitsLayoutRoute = matchPath(
-    `/app/class-management/${classId}/units/*`,
+    `/app/classes/${classId}/units/*`,
     location.pathname
   );
   const manageMemberLayoutRoute = matchPath(
-    `/app/class-management/${classId}/members/*`,
+    `/app/classes/${classId}/members/*`,
     location.pathname
+  );
+
+  const isInstructor = selectedClass?.members?.some(
+    (member) => member.role === CLASS_ROLES.INSTRUCTOR
   );
 
   return (
@@ -47,12 +52,12 @@ const ClassManagementLayout: React.FC = () => {
             </Typography>
           )}
         </Box>
-        {editUnitsLayoutRoute && (
+        {editUnitsLayoutRoute && isInstructor && (
           <Button variant="contained" onClick={() => navigate("units-edit")}>
             학습 설정
           </Button>
         )}
-        {manageMemberLayoutRoute && (
+        {manageMemberLayoutRoute && isInstructor && (
           <Button variant="contained">멤버 설정</Button>
         )}
       </Box>
@@ -63,4 +68,4 @@ const ClassManagementLayout: React.FC = () => {
   );
 };
 
-export default ClassManagementLayout;
+export default ClassLayout;
