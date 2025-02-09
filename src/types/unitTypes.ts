@@ -1,4 +1,5 @@
 import { Delta } from "quill";
+import { Assignment } from "./assignmentTypes";
 
 export interface UnitsResponse {
   status: string;
@@ -25,13 +26,4 @@ export interface Subunit {
   content: Delta | null;
   materials_path?: string | null;
   assignments?: Assignment[];
-}
-
-export interface Assignment {
-  type?: "create" | "update" | "delete";
-  id: number;
-  subunit_id: number;
-  title: string;
-  content: Delta | null;
-  attachment?: string | null;
 }

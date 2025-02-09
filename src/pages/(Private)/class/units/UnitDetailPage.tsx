@@ -1,8 +1,22 @@
-import React from "react";
-import { Box, Typography, Link } from "@mui/material";
+import React, { useState } from "react";
+import {
+  Box,
+  Typography,
+  Link,
+  Chip,
+  IconButton,
+  Tooltip,
+  Button,
+} from "@mui/material";
+import { Description } from "@mui/icons-material";
 import { Unit, Subunit } from "../../../../types/unitTypes";
+import { Assignment } from "../../../../types/assignmentTypes";
 import { useOutletContext } from "react-router-dom";
+import { useClassContext } from "../../../../contexts/ClassContext";
+import { isStudent } from "../../../../utils/roleUtils";
 import ContentInput from "../../../../components/common/ContentInput";
+import AssignmentModal from "./../../../../components/modals/AssignmentModal";
+import SubmissionStatus from "./../../../../components/common/SubmissionStatus";
 
 interface OutletContext {
   selectedUnit: Unit | null;
@@ -11,6 +25,21 @@ interface OutletContext {
 
 const UnitDetailPage: React.FC = () => {
   const { selectedUnit, selectedSubunit } = useOutletContext<OutletContext>();
+  const { selectedClass } = useClassContext();
+
+  const [openAssignmentModal, setOpenAssignmentModal] = useState(false);
+  const [selectedAssignment, setSelectedAssignment] =
+    useState<Assignment | null>(null);
+
+  const handleOpenAssignment = (assignment: Assignment) => {
+    setSelectedAssignment(assignment);
+    setOpenAssignmentModal(true);
+  };
+
+  const handleCloseAssignment = () => {
+    setOpenAssignmentModal(false);
+    setSelectedAssignment(null);
+  };
 
   if (!selectedUnit) {
     return (
@@ -102,6 +131,58 @@ const UnitDetailPage: React.FC = () => {
                 </Link>
               </Box>
             )}
+            {selectedSubunit.assignments &&
+              selectedSubunit.assignments.length > 0 && (
+                <Box sx={{ marginTop: 2 }}>
+                  <Typography
+                    variant="subtitle1"
+                    sx={{ fontWeight: "bold", marginBottom: 1 }}
+                  >
+                    과제 목록
+                  </Typography>
+                  <Box
+                    sx={{ display: "flex", flexDirection: "column", gap: 1 }}
+                  >
+                    {selectedSubunit.assignments.map(
+                      (assignment, index) =>
+                        assignment.type !== "delete" && (
+                          <Box
+                            key={assignment.id}
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                              padding: 1,
+                              borderRadius: 1,
+                              backgroundColor: "#f9f9f9",
+                            }}
+                          >
+                            <Chip
+                              label={`과제${index + 1}`}
+                              sx={{ marginRight: 1 }}
+                              color="default"
+                              variant="outlined"
+                            />
+                            <Typography sx={{ flexGrow: 1 }}>
+                              {assignment.title}
+                            </Typography>
+                            <Tooltip title="과제 보기">
+                              <IconButton
+                                size="small"
+                                onClick={() => handleOpenAssignment(assignment)}
+                              >
+                                <Description fontSize="small" />
+                              </IconButton>
+                            </Tooltip>
+                            {isStudent(selectedClass) && (
+                              <SubmissionStatus assignmentId={assignment.id} />
+                            )}
+                          </Box>
+                        )
+                    )}
+                  </Box>
+                </Box>
+              )}
           </>
         ) : (
           <Typography variant="body1" sx={{ opacity: 0.7 }}>
@@ -109,6 +190,13 @@ const UnitDetailPage: React.FC = () => {
           </Typography>
         )}
       </Box>
+      {selectedAssignment && (
+        <AssignmentModal
+          open={openAssignmentModal}
+          onClose={handleCloseAssignment}
+          assignment={selectedAssignment}
+        />
+      )}
     </Box>
   );
 };

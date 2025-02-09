@@ -10,7 +10,7 @@ import { useForm } from "react-hook-form";
 import FormInput from "../common/FormInput";
 import ContentInput from "../common/ContentInput";
 import FileInput from "../common/FileInput";
-import { Assignment } from "../../types/unitTypes";
+import { Assignment } from "./../../types/assignmentTypes";
 
 interface AssignmentModalProps {
   open: boolean;
