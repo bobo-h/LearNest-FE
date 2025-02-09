@@ -3,7 +3,7 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { Box } from "@mui/material";
 import Header from "../../components/layout/PrivateLayout/Header";
-import Sidebar from "../../components/layout/PrivateLayout/Sidebar";
+import Sidebar from "../../components/sidebar/Sidebar";
 import { ClassProvider } from "../../contexts/ClassContext";
 import { UnitProvider } from "../../contexts/UnitContext";
 

@@ -61,7 +61,7 @@ const EditUnitList: React.FC<EditUnitListProps> = ({
                   sort_order: unit.subunits.length + 1,
                   name: `소단원 ${unit.subunits.length + 1}`,
                   description: "",
-                  content: "",
+                  content: null,
                   materials_path: "",
                 },
               ],

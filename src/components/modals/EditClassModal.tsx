@@ -1,40 +1,49 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Button, Typography, Modal } from "@mui/material";
 import { useForm } from "react-hook-form";
 import FormInput from "../common/FormInput";
 import FormRadio from "../common/FormRadio";
 import { uploadToCloudinary } from "../../utils/uploadToCloudinary";
-import { useCreateClass } from "../../hooks/useClasses";
+import { useCreateClass, useUpdateClass } from "../../hooks/useClasses";
+import { ClassFormData } from "./../../types/classTypes";
 
-interface ClassCreateModalProps {
+interface EditClassModalProps {
   open: boolean;
   onClose: () => void;
+  mode: "create" | "edit";
+  initialData?: ClassFormData & { id?: number };
 }
 
-interface ClassFormData {
-  name: string;
-  description?: string;
-  visibility: "public" | "private";
-  mainImageUrl?: string;
-}
-
-const ClassCreateModal: React.FC<ClassCreateModalProps> = ({
+const EditClassModal: React.FC<EditClassModalProps> = ({
   open,
   onClose,
+  mode,
+  initialData,
 }) => {
-  const { handleSubmit, control, reset } = useForm<ClassFormData>({
+  const { handleSubmit, control, reset, setValue } = useForm<ClassFormData>({
     defaultValues: {
-      visibility: "private",
+      name: initialData?.name || "",
+      description: initialData?.description || "",
+      visibility: initialData?.visibility || "private",
     },
   });
 
-  const { mutate: createClass, isPending } = useCreateClass();
+  useEffect(() => {
+    if (mode === "edit" && initialData) {
+      setValue("name", initialData.name);
+      setValue("description", initialData.description);
+      setValue("visibility", initialData.visibility);
+    }
+  }, [mode, initialData, setValue]);
+
+  const { mutate: createClass, isPending: isCreating } = useCreateClass();
+  const { mutate: updateClass, isPending: isUpdating } = useUpdateClass();
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const onSubmit = async (data: ClassFormData) => {
     try {
-      let mainImageUrl: string | undefined;
+      let mainImageUrl = initialData?.mainImageUrl;
 
       const fileInput =
         document.querySelector<HTMLInputElement>("#mainImageFile");
@@ -44,33 +53,53 @@ const ClassCreateModal: React.FC<ClassCreateModalProps> = ({
         mainImageUrl = await uploadToCloudinary(file);
       }
 
-      createClass(
-        {
-          ...data,
-          mainImageUrl,
-        },
-        {
-          onSuccess: () => {
-            onClose();
-            reset();
-            setErrorMessage(null);
-          },
-          onError: (error: any) => {
-            if (error.response?.data?.message) {
-              setErrorMessage(error.response.data.message);
-            } else {
-              setErrorMessage("클래스 생성 중 오류가 발생했습니다.");
-            }
-          },
-        }
-      );
+      if (mode === "create") {
+        createClass(
+          { ...data, mainImageUrl },
+          {
+            onSuccess: () => {
+              alert("클래스가 생성되었습니다.");
+              onClose();
+              reset();
+              setErrorMessage(null);
+            },
+            onError: (error: any) => {
+              setErrorMessage(
+                error.response?.data?.message || "클래스 생성 중 오류 발생"
+              );
+            },
+          }
+        );
+      } else {
+        if (!initialData?.id) return;
+        updateClass(
+          { classId: initialData.id, classData: { ...data, mainImageUrl } },
+          {
+            onSuccess: () => {
+              alert("클래스가 수정되었습니다.");
+              handleClose();
+            },
+            onError: (error: any) => {
+              setErrorMessage(
+                error.response?.data?.message || "클래스 수정 중 오류 발생"
+              );
+            },
+          }
+        );
+      }
     } catch (error) {
       setErrorMessage("이미지 업로드에 실패했습니다.");
     }
   };
 
+  const handleClose = () => {
+    reset();
+    setErrorMessage(null);
+    onClose();
+  };
+
   return (
-    <Modal open={open} onClose={onClose}>
+    <Modal open={open} onClose={handleClose}>
       <Box
         sx={{
           position: "absolute",
@@ -85,7 +114,7 @@ const ClassCreateModal: React.FC<ClassCreateModalProps> = ({
         }}
       >
         <Typography variant="h5" sx={{ marginBottom: "16px" }}>
-          클래스 생성
+          {mode === "create" ? "클래스 생성" : "클래스 수정"}
         </Typography>
 
         {errorMessage && (
@@ -131,8 +160,9 @@ const ClassCreateModal: React.FC<ClassCreateModalProps> = ({
             variant="contained"
             fullWidth
             sx={{ marginTop: "16px" }}
+            disabled={isCreating || isUpdating}
           >
-            생성하기
+            {mode === "create" ? "생성하기" : "수정하기"}
           </Button>
         </form>
       </Box>
@@ -140,4 +170,4 @@ const ClassCreateModal: React.FC<ClassCreateModalProps> = ({
   );
 };
 
-export default ClassCreateModal;
+export default EditClassModal;

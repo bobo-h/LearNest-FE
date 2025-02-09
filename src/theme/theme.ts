@@ -1,5 +1,22 @@
 import { createTheme } from "@mui/material/styles";
 
+declare module "@mui/material/styles" {
+  interface Palette {
+    customRed: Palette["primary"];
+    customGreen: Palette["primary"];
+    customBlue: Palette["primary"];
+    customYellow: Palette["primary"];
+    customGrey: Palette["primary"];
+  }
+  interface PaletteOptions {
+    customRed?: PaletteOptions["primary"];
+    customGreen?: PaletteOptions["primary"];
+    customBlue?: PaletteOptions["primary"];
+    customYellow?: PaletteOptions["primary"];
+    customGrey?: PaletteOptions["primary"];
+  }
+}
+
 const theme = createTheme({
   palette: {
     primary: { main: "#363062", contrastText: "#FFFFFF" },
@@ -7,7 +24,12 @@ const theme = createTheme({
     info: { main: "#818FB4", contrastText: "#FFFFFF" },
     warning: { main: "#FEF9D7", contrastText: "#363062" },
     background: { default: "#FFF", paper: "#FFFFFF" },
-    text: { primary: "#363062", secondary: "#435585" },
+    text: { primary: "#363062", secondary: "#435585", disabled: "#FFFFFF" },
+    customRed: { main: "#FF4D4D", contrastText: "#FFFFFF" },
+    customGreen: { main: "#4CAF50", contrastText: "#FFFFFF" },
+    customBlue: { main: "#3F51B5", contrastText: "#FFFFFF" },
+    customYellow: { main: "#FFC107", contrastText: "#000000" },
+    customGrey: { main: "#BDBDBD", contrastText: "#FFFFFF" },
   },
   typography: {
     fontFamily: "Arial, sans-serif",

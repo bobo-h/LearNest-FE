@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { useGetUserClasses } from "../../../hooks/useClasses";
-import ClassCreateModal from "../../../components/modals/ClassCreateModal";
+import EditClassModal from "../../../components/modals/EditClassModal";
+import JoinClassModal from "../../../components/modals/JoinClassModal";
 
-const ClassPromptPage: React.FC = () => {
+const MainPromptPage: React.FC = () => {
   const { data: classes } = useGetUserClasses();
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-
-  const handleCreateModalOpen = () => setIsCreateModalOpen(true);
-  const handleCreateModalClose = () => setIsCreateModalOpen(false);
+  const [isInviteModalOpen, setInviteModalOpen] = useState(false);
+  const [isJoinModalOpen, setJoinModalOpen] = useState(false);
 
   return (
     <Box
@@ -28,17 +27,26 @@ const ClassPromptPage: React.FC = () => {
             <Button
               variant="contained"
               color="primary"
-              onClick={handleCreateModalOpen}
+              onClick={() => setInviteModalOpen(true)}
             >
               생성하기
             </Button>
-            <Button variant="outlined" color="primary">
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={() => setJoinModalOpen(true)}
+            >
               참가하기
             </Button>
           </Box>
-          <ClassCreateModal
-            open={isCreateModalOpen}
-            onClose={handleCreateModalClose}
+          <EditClassModal
+            open={isInviteModalOpen}
+            onClose={() => setInviteModalOpen(false)}
+            mode="create"
+          />
+          <JoinClassModal
+            open={isJoinModalOpen}
+            onClose={() => setJoinModalOpen(false)}
           />
         </>
       ) : (
@@ -50,4 +58,4 @@ const ClassPromptPage: React.FC = () => {
   );
 };
 
-export default ClassPromptPage;
+export default MainPromptPage;

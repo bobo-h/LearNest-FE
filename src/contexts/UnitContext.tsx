@@ -27,6 +27,12 @@ export const UnitProvider = ({ children }: { children: ReactNode }) => {
         subunits: unit.subunits.map((subunit) => ({
           ...subunit,
           type: undefined,
+          assignments: subunit.assignments
+            ? subunit.assignments.map((assignment) => ({
+                ...assignment,
+                type: undefined,
+              }))
+            : [],
         })),
       }))
     );

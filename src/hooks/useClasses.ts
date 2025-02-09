@@ -1,5 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { fetchUserClasses, createClass } from "../services/class/classService";
+import {
+  fetchUserClasses,
+  createClass,
+  updateClass,
+  deleteClass,
+} from "../services/class/classService";
 
 export const useGetUserClasses = () => {
   return useQuery({
@@ -23,6 +28,38 @@ export const useCreateClass = () => {
     },
     onError: (error: any) => {
       console.error("Create Class Error:", error);
+    },
+  });
+};
+
+export const useUpdateClass = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: updateClass,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["userClasses"],
+      });
+    },
+    onError: (error: any) => {
+      console.error("Update Class Error:", error);
+    },
+  });
+};
+
+export const useDeleteClass = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteClass,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["userClasses"],
+      });
+    },
+    onError: (error: any) => {
+      console.error("Delete Class Error:", error);
     },
   });
 };

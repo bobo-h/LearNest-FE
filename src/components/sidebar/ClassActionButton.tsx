@@ -30,7 +30,7 @@ const ClassActionButton: React.FC = () => {
       >
         {isModalOpen ? <CloseIcon /> : <AddIcon />}
       </Fab>
-      {isModalOpen && <ClassActionModal onClose={handleToggle} />}
+      {isModalOpen && <ClassActionModal />}
     </Box>
   );
 };
