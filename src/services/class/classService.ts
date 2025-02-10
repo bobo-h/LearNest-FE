@@ -1,6 +1,9 @@
 import apiClient from "../apiClient";
-import { UserClassesResponse } from "../../types/classTypes";
-import { ClassFormData } from "./../../types/classTypes";
+import {
+  UserClassesResponse,
+  ClassFormData,
+  ClassMember,
+} from "../../types/classTypes";
 
 export const fetchUserClasses = async (): Promise<UserClassesResponse> => {
   const response = await apiClient.get("/classes");
@@ -26,4 +29,16 @@ export const updateClass = async ({
 export const deleteClass = async (classId: number) => {
   const response = await apiClient.delete(`/classes/${classId}`);
   return response.data;
+};
+
+export const leaveClass = async (classId: number) => {
+  const response = await apiClient.delete(`/classes/${classId}/leave`);
+  return response.data;
+};
+
+export const fetchClassMembers = async (
+  classId: number
+): Promise<ClassMember[] | []> => {
+  const response = await apiClient.get(`/classes/${classId}/members`);
+  return response.data.members ?? [];
 };

@@ -10,7 +10,11 @@ const Header: React.FC = () => {
   const [isModalOpen, setModalOpen] = useState(false);
 
   const handleProfileClick = () => {
-    setModalOpen((prev) => !prev);
+    setModalOpen(true);
+  };
+
+  const handleCloseProfile = () => {
+    setModalOpen(false);
   };
 
   return (
@@ -42,7 +46,7 @@ const Header: React.FC = () => {
           src="/profile-pic-placeholder.jpg"
           sx={{ bgcolor: "#ccc", marginLeft: "8px", cursor: "pointer" }}
         />
-        {isModalOpen && <ProfileModal onClose={() => setModalOpen(false)} />}
+        <ProfileModal open={isModalOpen} onClose={handleCloseProfile} />
       </Box>
     </Box>
   );

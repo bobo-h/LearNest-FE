@@ -31,7 +31,7 @@ const SignupPage: React.FC = () => {
     signup(
       { password, name, email, birthDate },
       {
-        onSuccess: () => navigate("/dashboard"),
+        onSuccess: () => navigate("/app/main"),
         onError: (error: any) => {
           if (error.response?.data?.message) {
             setErrorMessage(error.response.data.message);

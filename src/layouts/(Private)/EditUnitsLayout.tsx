@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Box, Button } from "@mui/material";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import EditUnitList from "../../components/classUnits/EditUnitList";
+import EditUnitList from "../../components/class/EditUnitList";
 import {
   useBatchProcessUnits,
   useGetUnitsWithDetails,

@@ -13,7 +13,7 @@ const MemberManagePage: React.FC = () => {
       }}
     >
       <Typography variant="h6" sx={{ textAlign: "center" }}>
-        클래스 멤버 관리하는 곳
+        클래스 멤버 별 과제 현황 확인하는 곳
       </Typography>
     </Box>
   );
