@@ -33,6 +33,8 @@ const SubmissionStatusChip: React.FC<{ status: string }> = ({ status }) => {
         backgroundColor: statusColors[status]?.bg,
         color: statusColors[status]?.text,
         fontWeight: "bold",
+        cursor: "pointer",
+        "&:hover": { backgroundColor: "grey.600" },
       }}
       size="small"
     />

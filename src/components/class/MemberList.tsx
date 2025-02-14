@@ -25,13 +25,13 @@ const MemberList: React.FC<MemberListProps> = ({ members, message }) => {
   };
 
   return (
-    <TableContainer component={Paper} sx={{ maxWidth: 400 }}>
+    <TableContainer component={Paper} sx={{ width: "100%" }}>
       <Table>
         <TableHead>
           <TableRow>
             <TableCell>#</TableCell>
             <TableCell>멤버명(이메일)</TableCell>
-            <TableCell>관리</TableCell>
+            <TableCell>학습률</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
