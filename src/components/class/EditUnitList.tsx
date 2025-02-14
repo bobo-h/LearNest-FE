@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import {
   Box,
   Button,
@@ -12,11 +12,11 @@ import { Unit, Subunit } from "../../types/unitTypes";
 
 interface EditUnitListProps {
   units: Unit[];
-  setUnits: React.Dispatch<React.SetStateAction<Unit[]>>;
+  setUnits: Dispatch<SetStateAction<Unit[]>>;
   selectedUnitId: number | null;
-  setSelectedUnitId: React.Dispatch<React.SetStateAction<number | null>>;
+  setSelectedUnitId: Dispatch<SetStateAction<number | null>>;
   selectedSubunitId: number | null;
-  setSelectedSubunitId: React.Dispatch<React.SetStateAction<number | null>>;
+  setSelectedSubunitId: Dispatch<SetStateAction<number | null>>;
 }
 
 const EditUnitList: React.FC<EditUnitListProps> = ({
@@ -35,7 +35,7 @@ const EditUnitList: React.FC<EditUnitListProps> = ({
       id: Date.now(),
       sort_order: units.length + 1,
       name: `단원 ${units.length + 1}`,
-      description: "",
+      description: null,
       subunits: [],
     };
 
@@ -60,9 +60,9 @@ const EditUnitList: React.FC<EditUnitListProps> = ({
                   unit_id: selectedUnitId,
                   sort_order: unit.subunits.length + 1,
                   name: `소단원 ${unit.subunits.length + 1}`,
-                  description: "",
+                  description: null,
                   content: null,
-                  materials_path: "",
+                  materials_path: null,
                 },
               ],
             }

@@ -23,6 +23,12 @@ export interface ClassFormData {
   mainImageUrl?: string | null;
 }
 
+export interface ClassMembersResponse {
+  status: string;
+  message: string;
+  members: ClassMember[];
+}
+
 export interface ClassMember {
   id: number;
   user_id: number;

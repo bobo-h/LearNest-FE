@@ -3,6 +3,7 @@ import {
   Submission,
   SubmissionFormData,
   FeedbackData,
+  SubmissionResponse,
 } from "../../types/submissionTypes";
 
 export const getSubmission = async ({
@@ -81,6 +82,16 @@ export const provideFeedback = async ({
   const response = await apiClient.put(
     `/classes/${classId}/assignments/${assignmentId}/submissions/${submissionId}/feedback`,
     feedbackData
+  );
+  return response.data;
+};
+
+export const fetchSubmissionsByMember = async (
+  classId: number,
+  userId: number
+): Promise<SubmissionResponse> => {
+  const response = await apiClient.get(
+    `/classes/${classId}/members/${userId}/submissions`
   );
   return response.data;
 };

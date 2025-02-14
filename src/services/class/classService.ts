@@ -2,7 +2,7 @@ import apiClient from "../apiClient";
 import {
   UserClassesResponse,
   ClassFormData,
-  ClassMember,
+  ClassMembersResponse,
 } from "../../types/classTypes";
 
 export const fetchUserClasses = async (): Promise<UserClassesResponse> => {
@@ -38,7 +38,7 @@ export const leaveClass = async (classId: number) => {
 
 export const fetchClassMembers = async (
   classId: number
-): Promise<ClassMember[] | []> => {
+): Promise<ClassMembersResponse> => {
   const response = await apiClient.get(`/classes/${classId}/members`);
-  return response.data.members ?? [];
+  return response.data;
 };

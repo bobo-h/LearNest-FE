@@ -83,7 +83,7 @@ export const useLeaveClass = () => {
 
 export const useGetClassMembers = (classId: number) => {
   return useQuery({
-    queryKey: ["userClasses", classId],
+    queryKey: ["classMembers", classId],
     queryFn: () => fetchClassMembers(classId),
     enabled: !!classId, // classId가 존재할 때만 실행
     staleTime: 1000 * 60 * 5,

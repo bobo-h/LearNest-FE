@@ -7,15 +7,23 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Typography,
 } from "@mui/material";
+import { useNavigate, useParams } from "react-router-dom";
 import { ClassMember } from "types/classTypes";
 
 interface MemberListProps {
   members: ClassMember[];
+  message?: string;
 }
 
-const MemberList: React.FC<MemberListProps> = ({ members }) => {
+const MemberList: React.FC<MemberListProps> = ({ members, message }) => {
+  const navigate = useNavigate();
+  const { classId } = useParams<{ classId: string }>();
+
+  const handleMemberClick = (userId: number) => {
+    navigate(`/app/classes/${classId}/members/${userId}`);
+  };
+
   return (
     <TableContainer component={Paper} sx={{ maxWidth: 400 }}>
       <Table>
@@ -31,7 +39,15 @@ const MemberList: React.FC<MemberListProps> = ({ members }) => {
             members.map((member, index) => (
               <TableRow key={member.id}>
                 <TableCell>{index + 1}</TableCell>
-                <TableCell>
+                <TableCell
+                  onClick={() => handleMemberClick(member.user_id)}
+                  sx={{
+                    cursor: "pointer",
+                    textDecoration: "underline",
+                    color: "primary.main",
+                    "&:hover": { color: "primary.dark" },
+                  }}
+                >
                   {member.user.name} ({member.user.email})
                 </TableCell>
                 <TableCell></TableCell>
@@ -40,7 +56,7 @@ const MemberList: React.FC<MemberListProps> = ({ members }) => {
           ) : (
             <TableRow>
               <TableCell colSpan={3} align="center">
-                멤버가 없습니다.
+                {message ?? "멤버가 없습니다."}
               </TableCell>
             </TableRow>
           )}
