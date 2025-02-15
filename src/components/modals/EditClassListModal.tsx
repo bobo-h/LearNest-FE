@@ -16,6 +16,7 @@ import {
   useDeleteClass,
   useLeaveClass,
 } from "../../hooks/useClasses";
+import ConfirmDialog from "../common/ConfirmDialog";
 
 interface EditClassListModalProps {
   open: boolean;
@@ -50,14 +51,22 @@ const EditClassListModal: React.FC<EditClassListModalProps> = ({
     setConfirmType(null);
   };
 
-  const handleConfirmAction = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
+  const handleConfirmAction = () => {
     if (confirmType === "delete" && selectedClassId !== null) {
-      deleteClass(selectedClassId);
+      deleteClass(selectedClassId, {
+        onSuccess: () => {
+          alert("클래스를 성공적으로 삭제했습니다.");
+          handleConfirmClose();
+        },
+      });
     } else if (confirmType === "leave" && selectedClassId !== null) {
-      leaveClass(selectedClassId);
+      leaveClass(selectedClassId, {
+        onSuccess: () => {
+          alert("클래스에서 나가기 되었습니다.");
+          handleConfirmClose();
+        },
+      });
     }
-    handleConfirmClose();
   };
 
   return (
@@ -166,30 +175,17 @@ const EditClassListModal: React.FC<EditClassListModalProps> = ({
           </Button>
         </Box>
 
-        <Dialog open={confirmOpen} onClose={handleConfirmClose}>
-          <DialogTitle>확인</DialogTitle>
-          <DialogContent>
-            <Typography>
-              {confirmType === "delete"
-                ? "해당 클래스를 정말로 삭제하시겠습니까?"
-                : "해당 클래스를 정말로 나가시겠습니까?"}
-            </Typography>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleConfirmClose();
-              }}
-              color="primary"
-            >
-              취소
-            </Button>
-            <Button onClick={handleConfirmAction} variant="contained">
-              확인
-            </Button>
-          </DialogActions>
-        </Dialog>
+        <ConfirmDialog
+          open={confirmOpen}
+          onClose={handleConfirmClose}
+          onConfirm={handleConfirmAction}
+          title="확인"
+          message={
+            confirmType === "delete"
+              ? "해당 클래스를 정말로 삭제하시겠습니까?"
+              : "해당 클래스를 정말로 나가시겠습니까?"
+          }
+        />
       </>
     </Modal>
   );

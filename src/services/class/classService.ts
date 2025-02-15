@@ -42,3 +42,16 @@ export const fetchClassMembers = async (
   const response = await apiClient.get(`/classes/${classId}/members`);
   return response.data;
 };
+
+export const removeClassMember = async ({
+  classId,
+  userId,
+}: {
+  classId: number;
+  userId: number;
+}) => {
+  const response = await apiClient.delete(
+    `/classes/${classId}/members/${userId}`
+  );
+  return response.data;
+};

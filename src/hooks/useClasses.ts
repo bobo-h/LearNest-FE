@@ -6,6 +6,7 @@ import {
   deleteClass,
   leaveClass,
   fetchClassMembers,
+  removeClassMember,
 } from "../services/class/classService";
 
 export const useGetUserClasses = () => {
@@ -88,5 +89,21 @@ export const useGetClassMembers = (classId: number) => {
     enabled: !!classId, // classId가 존재할 때만 실행
     staleTime: 1000 * 60 * 5,
     retry: 1,
+  });
+};
+
+export const useRemoveClassMember = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: removeClassMember,
+    onSuccess: (_, { classId }) => {
+      queryClient.invalidateQueries({
+        queryKey: ["classMembers", classId],
+      });
+    },
+    onError: (error: any) => {
+      console.error("Remove Class Member Error:", error);
+    },
   });
 };

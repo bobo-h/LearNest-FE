@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import {
   Outlet,
@@ -9,10 +9,13 @@ import {
 } from "react-router-dom";
 import { useClassContext } from "../../contexts/ClassContext";
 import { CLASS_ROLES } from "constants/role";
+import EditClassMemberModal from "../../components/modals/EditClassMemberModal";
 
 const ClassLayout: React.FC = () => {
   const { selectedClass } = useClassContext();
   const { classId } = useParams<{ classId: string }>();
+
+  const [isMemberModalOpen, setMemberModalOpen] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -58,12 +61,19 @@ const ClassLayout: React.FC = () => {
           </Button>
         )}
         {manageMemberLayoutRoute && isInstructor && (
-          <Button variant="contained">멤버 설정</Button>
+          <Button variant="contained" onClick={() => setMemberModalOpen(true)}>
+            멤버 설정
+          </Button>
         )}
       </Box>
       <Box sx={{ flex: 1, py: 3 }}>
         <Outlet />
       </Box>
+      <EditClassMemberModal
+        open={isMemberModalOpen}
+        onClose={() => setMemberModalOpen(false)}
+        classId={Number(classId)}
+      />
     </Box>
   );
 };
