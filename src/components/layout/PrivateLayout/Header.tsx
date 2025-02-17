@@ -3,14 +3,22 @@ import { Box, Typography, Avatar } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../contexts/AuthContext";
 import ProfileModal from "./../../modals/ProfileModal";
+import { UserProfile } from "types/userTypes";
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  user: UserProfile;
+}
+
+const Header: React.FC<HeaderProps> = ({ user }) => {
   const navigate = useNavigate();
-  const { user } = useAuth();
   const [isModalOpen, setModalOpen] = useState(false);
 
   const handleProfileClick = () => {
-    setModalOpen((prev) => !prev);
+    setModalOpen(true);
+  };
+
+  const handleCloseProfile = () => {
+    setModalOpen(false);
   };
 
   return (
@@ -42,7 +50,7 @@ const Header: React.FC = () => {
           src="/profile-pic-placeholder.jpg"
           sx={{ bgcolor: "#ccc", marginLeft: "8px", cursor: "pointer" }}
         />
-        {isModalOpen && <ProfileModal onClose={() => setModalOpen(false)} />}
+        <ProfileModal open={isModalOpen} onClose={handleCloseProfile} />
       </Box>
     </Box>
   );

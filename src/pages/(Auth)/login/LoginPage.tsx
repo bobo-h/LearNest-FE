@@ -12,20 +12,19 @@ interface LoginFormInputs {
 }
 
 const LoginPage: React.FC = () => {
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginFormInputs>();
+  const { control, handleSubmit } = useForm<LoginFormInputs>();
   const { mutate: login, isPending } = useLogin();
   const navigate = useNavigate();
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const onSubmit: SubmitHandler<LoginFormInputs> = (data) => {
+  const onSubmit: SubmitHandler<LoginFormInputs> = (userData) => {
     setErrorMessage(null);
-    login(data, {
-      onSuccess: () => {
+    login(userData, {
+      onSuccess: ({ user }) => {
+        if (user?.name) {
+          alert(`${user.name}님 환영합니다.`);
+        }
         navigate("/app/main");
       },
       onError: (error: any) => {

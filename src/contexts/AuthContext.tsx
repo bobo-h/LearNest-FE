@@ -3,17 +3,14 @@ import React, {
   useState,
   useContext,
   ReactNode,
-  useEffect,
+  Dispatch,
+  SetStateAction,
 } from "react";
-
-interface User {
-  name: string;
-  role: string;
-}
+import { UserProfile } from "types/userTypes";
 
 interface AuthContextProps {
-  user: User | null;
-  login: (user: User, token: string) => void;
+  user: UserProfile | null;
+  setUser: Dispatch<SetStateAction<UserProfile | null>>;
   logout: () => void;
 }
 
@@ -24,30 +21,16 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    const storedUser = sessionStorage.getItem("user");
-    const storedToken = sessionStorage.getItem("accessToken");
-    if (storedUser && storedToken) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
-
-  const login = (user: User, token: string) => {
-    setUser(user);
-    sessionStorage.setItem("user", JSON.stringify(user));
-    sessionStorage.setItem("accessToken", token);
-  };
+  const [user, setUser] = useState<UserProfile | null>(null);
 
   const logout = () => {
-    sessionStorage.removeItem("user");
     sessionStorage.removeItem("accessToken");
+    setUser(null);
     window.location.replace("/");
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, setUser, logout }}>
       {children}
     </AuthContext.Provider>
   );

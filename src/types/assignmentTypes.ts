@@ -6,5 +6,6 @@ export interface Assignment {
   subunit_id: number;
   title: string;
   content: Delta | null;
-  attachment?: string | null;
+  attachment: string | null;
+  created_at: Date;
 }

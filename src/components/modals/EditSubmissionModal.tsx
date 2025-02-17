@@ -6,15 +6,17 @@ import {
   DialogActions,
   Button,
   Typography,
+  Box,
 } from "@mui/material";
-import ContentInput from "./../common/ContentInput";
-import FileInput from "./../common/FileInput";
 import { Submission, SubmissionFormData } from "../../types/submissionTypes";
 import {
   useCreateSubmission,
   useUpdateSubmission,
 } from "../../hooks/useSubmission";
 import { useForm } from "react-hook-form";
+import ContentInput from "./../common/ContentInput";
+import FileInput from "./../common/FileInput";
+import SubmissionStatusChip from "./../common/SubmissionStatusChip";
 
 interface EditSubmissionModalProps {
   open: boolean;
@@ -86,6 +88,57 @@ const EditSubmissionModal: React.FC<EditSubmissionModalProps> = ({
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle>{submission ? "과제 수정" : "과제 제출"}</DialogTitle>
       <DialogContent>
+        {submission && (submission.status || submission.feedback) && (
+          <Box
+            sx={{
+              mb: 3,
+              p: 2,
+              border: "1px solid",
+              borderColor: "grey.300",
+              borderRadius: 2,
+              backgroundColor: "grey.100",
+            }}
+          >
+            {submission.status && (
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  mb: submission.feedback ? 2 : 0,
+                }}
+              >
+                <Typography variant="subtitle2" sx={{ fontWeight: "bold" }}>
+                  제출 상태
+                </Typography>
+                <SubmissionStatusChip status={submission.status} />
+              </Box>
+            )}
+            {submission.feedback && (
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Typography variant="subtitle2" sx={{ fontWeight: "bold" }}>
+                  피드백
+                </Typography>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    minWidth: "50%",
+                    textAlign: "right",
+                  }}
+                >
+                  {submission.feedback}
+                </Typography>
+              </Box>
+            )}
+          </Box>
+        )}
+
         <ContentInput
           name="content"
           control={control}

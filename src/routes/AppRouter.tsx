@@ -5,18 +5,28 @@ import PrivateLayout from "../layouts/(Private)/PrivateLayout";
 import ClassLayout from "layouts/(Private)/ClassLayout";
 import EditUnitsLayout from "../layouts/(Private)/EditUnitsLayout";
 import UnitsLayout from "../layouts/(Private)/UnitsLayout";
+import MembersLayout from "layouts/(Private)/MembersLayout";
 import LandingPage from "../pages/(Public)/landing/LandingPage";
+import InvitePage from "../pages/(Public)/invite/InvitePage";
 import LoginPage from "../pages/(Auth)/login/LoginPage";
 import SignupPage from "../pages/(Auth)/signup/SignupPage";
 import PrivateRoute from "./PrivateRoute";
 import MainPromptPage from "../pages/(Private)/main/MainPromptPage";
 import AdminDashboardPage from "../pages/(Private)/adminDashboard/AdminDashboardPage";
-import MemberManagePage from "../pages/(Private)/class/MemberManagePage";
+import MemberManagePage from "../pages/(Private)/class/members/MemberManagePage";
 import EditUnitDetailPage from "../pages/(Private)/class/units-edit/EditUnitDetailPage";
 import EditSubunitDetailPage from "../pages/(Private)/class/units-edit/EditSubunitDetailPage";
 import UnitDetailPage from "pages/(Private)/class/units/UnitDetailPage";
 
 const AppRouter = createBrowserRouter([
+  {
+    path: "/classes/:classId/invite/:token",
+    element: <InvitePage />,
+    loader: ({ params }) => {
+      console.log("📌 라우트 매칭됨:", params);
+      return params;
+    },
+  },
   {
     path: "/",
     element: <PublicLayout />,
@@ -41,7 +51,8 @@ const AppRouter = createBrowserRouter([
         children: [
           {
             path: "members",
-            element: <MemberManagePage />,
+            element: <MembersLayout />,
+            children: [{ path: ":userId", element: <MemberManagePage /> }],
           },
           {
             path: "units",

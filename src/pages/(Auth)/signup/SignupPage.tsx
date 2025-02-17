@@ -31,7 +31,12 @@ const SignupPage: React.FC = () => {
     signup(
       { password, name, email, birthDate },
       {
-        onSuccess: () => navigate("/dashboard"),
+        onSuccess: ({ user }) => {
+          if (user?.name) {
+            alert(`${user.name}님 환영합니다.`);
+          }
+          navigate("/app/main");
+        },
         onError: (error: any) => {
           if (error.response?.data?.message) {
             setErrorMessage(error.response.data.message);

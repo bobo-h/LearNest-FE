@@ -5,6 +5,7 @@ import {
   updateSubmission,
   deleteSubmission,
   provideFeedback,
+  fetchSubmissionsByMember,
 } from "../services/submission/submissionService";
 import { SubmissionFormData, FeedbackData } from "../types/submissionTypes";
 
@@ -65,14 +66,24 @@ export const useDeleteSubmission = () => {
   });
 };
 
+export const useGetSubmissionsByMember = (classId: number, userId: number) => {
+  return useQuery({
+    queryKey: ["submissions", classId],
+    queryFn: () => fetchSubmissionsByMember(classId, userId),
+    enabled: !!classId && !!userId, // classId와 userId가 존재할 때만 실행
+    staleTime: 1000 * 60 * 5,
+    retry: 1,
+  });
+};
+
 export const useProvideFeedback = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: provideFeedback,
-    onSuccess: (_, { classId, assignmentId }) => {
+    onSuccess: (_, { classId }) => {
       queryClient.invalidateQueries({
-        queryKey: ["submission", classId, assignmentId],
+        queryKey: ["submissions", classId],
       });
     },
     onError: (error: any) => {

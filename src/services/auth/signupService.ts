@@ -1,23 +1,8 @@
+import { SignupFormData, SignupResponse } from "types/authTypes";
 import apiClient from "../apiClient";
 
-export interface SignupData {
-  name: string;
-  email: string;
-  password: string;
-  birthDate: string;
-}
-
-export interface SignupResponse {
-  status: string;
-  message: string;
-  user: {
-    name: string;
-    role: string;
-  };
-}
-
 export const signup = async (
-  data: SignupData
+  data: SignupFormData
 ): Promise<{ user: SignupResponse["user"]; token: string }> => {
   const { birthDate, ...otherData } = data;
   const requestData = {

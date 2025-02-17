@@ -3,7 +3,7 @@ import { Typography, Box } from "@mui/material";
 import { useParams, useNavigate, Outlet } from "react-router-dom";
 import { Unit, Subunit } from "../../types/unitTypes";
 import { useGetUnitsWithDetails } from "../../hooks/useUnits";
-import UnitList from "../../components/classUnits/UnitList";
+import UnitList from "../../components/class/UnitList";
 
 const UnitsLayout: React.FC = () => {
   const { classId, unitId, subunitId } = useParams<{

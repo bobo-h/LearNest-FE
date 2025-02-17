@@ -59,7 +59,7 @@ const LandingPage: React.FC = () => {
         </Button>
         <Button
           variant="outlined"
-          onClick={() => navigate("/login")}
+          onClick={() => navigate("/signup")}
           sx={{ flex: 1 }}
         >
           참여하기

@@ -4,6 +4,9 @@ import {
   createClass,
   updateClass,
   deleteClass,
+  leaveClass,
+  fetchClassMembers,
+  removeClassMember,
 } from "../services/class/classService";
 
 export const useGetUserClasses = () => {
@@ -11,7 +14,7 @@ export const useGetUserClasses = () => {
     queryKey: ["userClasses"],
     queryFn: fetchUserClasses,
     staleTime: 1000 * 60 * 5, // 5분 동안 캐시 유지
-    retry: 1, // 실패 시 1회 재시도
+    retry: 1,
   });
 };
 
@@ -21,7 +24,6 @@ export const useCreateClass = () => {
   return useMutation({
     mutationFn: createClass,
     onSuccess: (newClass) => {
-      // 캐시된 클래스 목록을 무효화
       queryClient.invalidateQueries({
         queryKey: ["userClasses"],
       });
@@ -60,6 +62,48 @@ export const useDeleteClass = () => {
     },
     onError: (error: any) => {
       console.error("Delete Class Error:", error);
+    },
+  });
+};
+
+export const useLeaveClass = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: leaveClass,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["userClasses"],
+      });
+    },
+    onError: (error: any) => {
+      console.error("Leave Class Error:", error);
+    },
+  });
+};
+
+export const useGetClassMembers = (classId: number) => {
+  return useQuery({
+    queryKey: ["classMembers", classId],
+    queryFn: () => fetchClassMembers(classId),
+    enabled: !!classId, // classId가 존재할 때만 실행
+    staleTime: 1000 * 60 * 5,
+    retry: 1,
+  });
+};
+
+export const useRemoveClassMember = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: removeClassMember,
+    onSuccess: (_, { classId }) => {
+      queryClient.invalidateQueries({
+        queryKey: ["classMembers", classId],
+      });
+    },
+    onError: (error: any) => {
+      console.error("Remove Class Member Error:", error);
     },
   });
 };

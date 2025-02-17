@@ -22,3 +22,22 @@ export interface ClassFormData {
   visibility: "public" | "private";
   mainImageUrl?: string | null;
 }
+
+export interface ClassMembersResponse {
+  status: string;
+  message: string;
+  members: ClassMember[];
+}
+
+export interface ClassMember {
+  id: number;
+  user_id: number;
+  class_id: number;
+  role: "instructor" | "student";
+  joined_at: string;
+  user: {
+    id: number;
+    name: string;
+    email: string;
+  };
+}
