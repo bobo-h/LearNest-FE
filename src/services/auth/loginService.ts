@@ -1,21 +1,8 @@
 import apiClient from "../apiClient";
-
-interface LoginData {
-  email: string;
-  password: string;
-}
-
-interface LoginResponse {
-  status: string;
-  message: string;
-  user: {
-    name: string;
-    role: string;
-  };
-}
+import { LoginFormData, LoginResponse } from "../../types/authTypes";
 
 export const login = async (
-  data: LoginData
+  data: LoginFormData
 ): Promise<{ user: LoginResponse["user"]; token: string }> => {
   const response = await apiClient.post("/auth/login", data);
   const token = response.headers["authorization"]?.split(" ")[1];

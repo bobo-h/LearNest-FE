@@ -7,6 +7,7 @@ import EditUnitsLayout from "../layouts/(Private)/EditUnitsLayout";
 import UnitsLayout from "../layouts/(Private)/UnitsLayout";
 import MembersLayout from "layouts/(Private)/MembersLayout";
 import LandingPage from "../pages/(Public)/landing/LandingPage";
+import InvitePage from "../pages/(Public)/invite/InvitePage";
 import LoginPage from "../pages/(Auth)/login/LoginPage";
 import SignupPage from "../pages/(Auth)/signup/SignupPage";
 import PrivateRoute from "./PrivateRoute";
@@ -18,6 +19,14 @@ import EditSubunitDetailPage from "../pages/(Private)/class/units-edit/EditSubun
 import UnitDetailPage from "pages/(Private)/class/units/UnitDetailPage";
 
 const AppRouter = createBrowserRouter([
+  {
+    path: "/classes/:classId/invite/:token",
+    element: <InvitePage />,
+    loader: ({ params }) => {
+      console.log("📌 라우트 매칭됨:", params);
+      return params;
+    },
+  },
   {
     path: "/",
     element: <PublicLayout />,

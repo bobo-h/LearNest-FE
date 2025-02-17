@@ -3,10 +3,14 @@ import { Box, Typography, Avatar } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../contexts/AuthContext";
 import ProfileModal from "./../../modals/ProfileModal";
+import { UserProfile } from "types/userTypes";
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  user: UserProfile;
+}
+
+const Header: React.FC<HeaderProps> = ({ user }) => {
   const navigate = useNavigate();
-  const { user } = useAuth();
   const [isModalOpen, setModalOpen] = useState(false);
 
   const handleProfileClick = () => {
