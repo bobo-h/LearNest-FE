@@ -51,7 +51,7 @@ const UnitDetailPage: React.FC = () => {
           height: "100%",
         }}
       >
-        <Typography variant="h5">단원이 설정되지 않습니다.</Typography>
+        <Typography variant="h5">단원이 설정되지 않았습니다.</Typography>
       </Box>
     );
   }
