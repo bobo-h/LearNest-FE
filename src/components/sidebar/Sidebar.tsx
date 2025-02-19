@@ -73,6 +73,10 @@ const Sidebar: React.FC<SidebarProps> = ({
   };
 
   const handleSubMenuClick = (subMenuId: string, classId: number) => {
+    if (subMenuId === SUBMENU_IDS.QNA) {
+      alert("오픈 준비 중 입니다");
+      return;
+    }
     const selectClass = getSelectedClass(classId);
     if (!selectClass) return;
     setSelectedClass(selectClass);
@@ -105,10 +109,10 @@ const Sidebar: React.FC<SidebarProps> = ({
         boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
       }}
     >
-      <Typography variant="h6" sx={{ p: 2 }}>
+      <Typography variant="h6" sx={{ p: 2, fontWeight: "bold" }}>
         {title}
       </Typography>
-      <List sx={{ flexGrow: 1, overflowY: "auto" }}>
+      <List sx={{ flexGrow: 1, overflowY: "auto", paddingY: 0 }}>
         {menus.map((menu) => (
           <React.Fragment key={menu.id}>
             <Typography
@@ -131,7 +135,10 @@ const Sidebar: React.FC<SidebarProps> = ({
                     <ListItemButton
                       onClick={() => handleSubMenuToggle(child.id)}
                     >
-                      <ListItemText primary={child.name} />
+                      <ListItemText
+                        primary={child.name}
+                        sx={{ fontWeight: "bold" }}
+                      />
                       {menu.subMenu.length > 0 &&
                         (openSubItems[child.id] ? (
                           <ExpandLess />

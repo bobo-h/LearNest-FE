@@ -12,10 +12,9 @@ const LandingPage: React.FC = () => {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: "200px 16px",
+        padding: "170px 16px",
       }}
     >
-      {/* Hero Section (슬로건 + 이미지 박스) */}
       <Box
         sx={{
           display: "flex",
@@ -23,7 +22,7 @@ const LandingPage: React.FC = () => {
           alignItems: "center",
           width: "100%",
           maxWidth: "1000px",
-          marginBottom: "32px",
+          marginBottom: "80px",
         }}
       >
         <Box>
@@ -38,29 +37,26 @@ const LandingPage: React.FC = () => {
           </Typography>
         </Box>
 
-        {/* 이미지 박스 */}
         <Box
-          sx={{
-            width: "400px",
-            height: "300px",
-            backgroundColor: "#eee",
-            borderRadius: "8px",
-          }}
+          component="img"
+          src="/Logo.png"
+          alt="LearNest Logo"
+          sx={{ height: "280px", margin: 8 }}
         />
       </Box>
 
-      <Box sx={{ display: "flex", gap: "16px", marginTop: "16px" }}>
+      <Box sx={{ display: "flex", gap: "80px", marginTop: "16px" }}>
         <Button
           variant="contained"
           onClick={() => navigate("/login")}
-          sx={{ flex: 1 }}
+          sx={{ flex: 1, height: "60px", width: "200px", fontSize: "20px" }}
         >
           생성하기
         </Button>
         <Button
           variant="outlined"
           onClick={() => navigate("/signup")}
-          sx={{ flex: 1 }}
+          sx={{ flex: 1, height: "60px", width: "200px", fontSize: "20px" }}
         >
           참여하기
         </Button>

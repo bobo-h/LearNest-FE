@@ -40,7 +40,7 @@ const ClassLayout: React.FC = () => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          padding: 2.2,
+          padding: 3,
           backgroundColor: "primary.main",
           color: "primary.contrastText",
         }}
@@ -53,6 +53,7 @@ const ClassLayout: React.FC = () => {
               width: 50,
               height: 50,
               bgcolor: "white",
+              color: "primary.main",
               backgroundSize: "cover",
               backgroundPosition: "center",
               fontSize: "1.5rem",
@@ -76,13 +77,26 @@ const ClassLayout: React.FC = () => {
         </Box>
         <Box sx={{ display: "flex", gap: 1 }}>
           {editUnitsLayoutRoute && isInstructor(selectedClass) && (
-            <Button variant="contained" onClick={() => navigate("units-edit")}>
+            <Button
+              variant="contained"
+              sx={{
+                bgcolor: "white",
+                color: "primary.main",
+                fontWeight: "bold",
+              }}
+              onClick={() => navigate("units-edit")}
+            >
               학습 설정
             </Button>
           )}
           {manageMemberLayoutRoute && isInstructor(selectedClass) && (
             <Button
               variant="contained"
+              sx={{
+                bgcolor: "white",
+                color: "primary.main",
+                fontWeight: "bold",
+              }}
               onClick={() => setMemberModalOpen(true)}
             >
               멤버 설정

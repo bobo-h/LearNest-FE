@@ -17,17 +17,13 @@ const AuthLayout: React.FC = () => {
         padding: "16px",
       }}
     >
-      <Typography
-        variant="h4"
-        sx={{
-          fontWeight: "bold",
-          cursor: "pointer",
-          marginBottom: "32px",
-        }}
+      <Box
+        component="img"
+        src="/LogoName.png"
+        alt="LearNest Logo"
+        sx={{ height: 50, cursor: "pointer" }}
         onClick={() => navigate("/")}
-      >
-        LearNest
-      </Typography>
+      />
       <Outlet />
     </Box>
   );
