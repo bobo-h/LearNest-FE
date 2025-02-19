@@ -11,20 +11,19 @@ const Header: React.FC = () => {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        padding: "16px 32px",
+        padding: "16px 32px 16px 16px",
         borderBottom: "1px solid #ddd",
         backgroundColor: "#fff",
       }}
     >
-      {/* 왼쪽: LearNest 로고 및 카테고리 메뉴 */}
       <Box sx={{ display: "flex", alignItems: "center" }}>
-        <Typography
-          variant="h6"
-          sx={{ fontWeight: "bold", marginRight: "24px", cursor: "pointer" }}
+        <Box
+          component="img"
+          src="/LogoName.png"
+          alt="LearNest Logo"
+          sx={{ height: 50, cursor: "pointer", marginRight: 8 }}
           onClick={() => navigate("/")}
-        >
-          LearNest
-        </Typography>
+        />
         <Box sx={{ display: "flex", gap: "16px" }}>
           <Typography
             variant="subtitle1"
@@ -43,7 +42,6 @@ const Header: React.FC = () => {
         </Box>
       </Box>
 
-      {/* 오른쪽: 로그인 / 시작하기 버튼 */}
       <Box sx={{ display: "flex", gap: "16px" }}>
         <Button variant="text" onClick={() => navigate("/login")}>
           로그인

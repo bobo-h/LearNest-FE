@@ -26,42 +26,43 @@ const UnitsLayout: React.FC = () => {
   );
 
   useEffect(() => {
-    if (units.length > 0 && (!unitId || !subunitId)) {
-      const currentUnit = units[0];
-      const currentSubunit = currentUnit.subunits[0] || null;
+    if (units.length > 0) {
+      let foundUnit =
+        units.find((unit) => unit.id === Number(unitId)) || units[0];
+      let foundSubunit =
+        foundUnit.subunits.find((sub) => sub.id === Number(subunitId)) ||
+        foundUnit.subunits[0] ||
+        null;
 
-      setSelectedUnit(currentUnit);
-      setSelectedSubunit(currentSubunit);
+      setSelectedUnit(foundUnit);
+      setSelectedSubunit(foundSubunit);
 
-      if (currentSubunit) {
-        navigate(`${currentUnit.id}/subunits/${currentSubunit.id}`);
-      } else {
-        navigate(`${currentUnit.id}`);
+      if (!unitId || !subunitId) {
+        if (foundSubunit) {
+          navigate(`${foundUnit.id}/subunits/${foundSubunit.id}`);
+        } else {
+          navigate(`${foundUnit.id}`);
+        }
       }
     }
   }, [units, unitId, subunitId, navigate]);
 
   const handleUnitSelect = (unit: Unit) => {
-    const firstSubunit = unit.subunits[0];
-    if (unit.subunits.length > 0) {
+    const firstSubunit = unit.subunits[0] || null;
+    setSelectedUnit(unit);
+    setSelectedSubunit(firstSubunit);
+
+    if (firstSubunit) {
       navigate(`${unit.id}/subunits/${firstSubunit.id}`);
-      setSelectedUnit(unit);
-      setSelectedSubunit(firstSubunit);
     } else {
       navigate(`${unit.id}`);
-      setSelectedUnit(unit);
-      setSelectedSubunit(null);
     }
   };
 
   const handleSubunitSelect = (subunit: Subunit) => {
-    const parentUnit = units.find((unit) =>
-      unit.subunits.some((item) => item.id === subunit.id)
-    );
-    if (parentUnit) {
-      navigate(`${parentUnit.id}/subunits/${subunit.id}`);
-      setSelectedUnit(parentUnit);
+    if (selectedUnit) {
       setSelectedSubunit(subunit);
+      navigate(`${selectedUnit.id}/subunits/${subunit.id}`);
     }
   };
 

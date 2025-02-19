@@ -1,8 +1,8 @@
 import React from "react";
 import { Outlet, useParams } from "react-router-dom";
 import { Box, CircularProgress, Typography } from "@mui/material";
-import MemberList from "../../components/class/MemberList";
 import { useGetClassMembers } from "../../hooks/useClasses";
+import MemberList from "../../components/class/MemberList";
 
 const MembersLayout: React.FC = () => {
   const { classId, userId } = useParams<{ classId: string; userId?: string }>();

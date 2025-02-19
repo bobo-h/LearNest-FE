@@ -1,9 +1,16 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  Dispatch,
+  SetStateAction,
+} from "react";
 import { Class } from "../types/classTypes";
 
 interface ClassContextProps {
   selectedClass: Class | null;
-  selectClass: (classData: Class) => void;
+  setSelectedClass: Dispatch<SetStateAction<Class | null>>;
 }
 
 const ClassContext = createContext<ClassContextProps | undefined>(undefined);
@@ -15,15 +22,11 @@ interface ClassProviderProps {
 export const ClassProvider = ({ children }: ClassProviderProps) => {
   const [selectedClass, setSelectedClass] = useState<Class | null>(null);
 
-  const selectClass = (classData: Class) => {
-    setSelectedClass(classData);
-  };
-
   return (
     <ClassContext.Provider
       value={{
         selectedClass,
-        selectClass,
+        setSelectedClass,
       }}
     >
       {children}

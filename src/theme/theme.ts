@@ -20,7 +20,7 @@ declare module "@mui/material/styles" {
 const theme = createTheme({
   palette: {
     primary: { main: "#363062", contrastText: "#FFFFFF" },
-    secondary: { main: "#435585", contrastText: "#FFFFFF" },
+    secondary: { main: "#a3a3b6", contrastText: "#FFFFFF" },
     info: { main: "#818FB4", contrastText: "#FFFFFF" },
     warning: { main: "#FEF9D7", contrastText: "#363062" },
     background: { default: "#FFF", paper: "#FFFFFF" },

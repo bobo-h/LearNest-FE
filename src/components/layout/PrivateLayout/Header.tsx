@@ -32,13 +32,13 @@ const Header: React.FC<HeaderProps> = ({ user }) => {
         backgroundColor: "#fff",
       }}
     >
-      <Typography
-        variant="h6"
-        sx={{ fontWeight: "bold", cursor: "pointer" }}
+      <Box
+        component="img"
+        src="/LogoName.png"
+        alt="LearNest Logo"
+        sx={{ height: 50, cursor: "pointer" }}
         onClick={() => navigate("/app/main")}
-      >
-        LearNest
-      </Typography>
+      />
       <Box
         sx={{ display: "flex", alignItems: "center" }}
         onClick={handleProfileClick}
