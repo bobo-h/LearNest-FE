@@ -1,46 +1,82 @@
-# Getting Started with Create React App
+# 📌 LearNest 프론트엔드 프로젝트
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+LearNest는 학습 관리 시스템(LMS)을 위한 프론트엔드 애플리케이션입니다. React와 TypeScript를 기반으로 하며, **컨텍스트 API와 React Query를 조합한 상태 관리**를 핵심으로 하고 있습니다.
 
-## Available Scripts
+## 🚀 기술 스택
 
-In the project directory, you can run:
+- **언어**: TypeScript
+- **프레임워크/라이브러리**: React
+- **스타일링**: MUI, Emotion (반응형 개선 필요)
+- **상태 관리**: **React Query + Context API**
+- **라우팅**: React Router
+- **HTTP 클라이언트**: Axios
+- **리치 텍스트 에디터**: Quill
+- **테스트**: React Testing Library, Jest
 
-### `npm start`
+## 📂 프로젝트 구조
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```
+📦 프로젝트 루트
+├── 📁 src               # 소스 코드 폴더
+│   ├── 📁 components    # 공통 UI 컴포넌트
+│   ├── 📁 contexts      # 컨텍스트 API 관련 폴더
+│   ├── 📁 hooks         # 커스텀 훅
+│   ├── 📁 pages         # 페이지 컴포넌트
+│   ├── 📁 routes        # 라우트 정의
+│   ├── 📁 services      # API 요청 관리
+│   ├── 📁 styles        # 스타일링 관련 파일 (반응형 개선 필요)
+│   ├── 📁 utils         # 유틸리티 함수
+│   ├── App.tsx         # 애플리케이션 엔트리 파일
+│   ├── index.tsx        # React 렌더링 엔트리
+├── 📁 public            # 정적 파일 폴더
+├── .env                 # 환경변수 파일 (Git에서 제외 필요)
+├── package.json         # 프로젝트 설정 및 종속성 목록
+├── tsconfig.json        # TypeScript 설정 파일
+├── README.md            # 프로젝트 문서
+```
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## ⚙️ 환경변수 설정 (.env 예시)
 
-### `npm test`
+```env
+REACT_APP_LOCAL_BACKEND=http://localhost:3000
+REACT_APP_BACKEND_PROXY=http://localhost:5000
+REACT_APP_PROD_BACKEND=https://api.learnest.com
+REACT_APP_CLOUDINARY_CLOUD_NAME=your_cloud_name
+REACT_APP_CLOUDINARY_PRESET=your_preset_name
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 📌 설치 및 실행
 
-### `npm run build`
+### 1. 패키지 설치
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```sh
+npm install
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 2. 개발 서버 실행
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```sh
+npm start
+```
 
-### `npm run eject`
+### 3. 빌드 및 실행
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```sh
+npm run build
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 📡 주요 기능
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+- **컨텍스트 API + React Query 기반 상태 관리**: 글로벌 상태 관리 및 데이터 패칭 최적화
+- **사용자 인증 및 권한 관리**: JWT를 이용한 로그인 및 역할 기반 접근 관리
+- **클래스 및 강의 관리**: 강의, 과제, 피드백 기능 제공
+- **반응형 UI 개선 필요**: 현재 MUI 및 Emotion을 활용하였으나 추가 최적화 필요
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## 🏗 배포
 
-## Learn More
+배포된 애플리케이션을 실행하려면 `build` 폴더를 정적 서버에서 제공해야 합니다.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+```sh
+npm run build
+serve -s build
+```
