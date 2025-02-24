@@ -80,3 +80,7 @@ npm run build
 npm run build
 serve -s build
 ```
+## 📘 프로젝트 문서
+
+더 자세한 문서는 노션에서 확인할 수 있습니다:  
+🔗 [LearNest 프로젝트 문서]([https://notion.so/your-project-link](https://honorable-afternoon-677.notion.site/LearNest-158b45991d0b8002a334db7f4c9f229f))
