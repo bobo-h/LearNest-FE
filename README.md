@@ -20,7 +20,8 @@ LearNest는 학습 관리 시스템(LMS)을 위한 프론트엔드 애플리케�
 ├── 📁 src               # 소스 코드 폴더
 │   ├── 📁 components    # 공통 UI 컴포넌트
 │   ├── 📁 contexts      # 컨텍스트 API 관련 폴더
-│   ├── 📁 hooks         # 커스텀 훅
+│   ├── 📁 hooks         # 쿼리 훅
+│   ├── 📁 layouts       # 로그인 여부나 사용자 유형에 따라 다른 레이아웃을 구성 (PrivateLayout, PublicLayout 등)
 │   ├── 📁 pages         # 페이지 컴포넌트
 │   ├── 📁 routes        # 라우트 정의
 │   ├── 📁 services      # API 요청 관리
